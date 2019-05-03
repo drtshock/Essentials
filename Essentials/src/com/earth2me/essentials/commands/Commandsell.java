@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsell extends EssentialsCommand {
     public Commandsell() {
@@ -30,9 +28,9 @@ public class Commandsell extends EssentialsCommand {
         }
 
         if (args[0].equalsIgnoreCase("hand") && !user.isAuthorized("essentials.sell.hand")) {
-            throw new Exception(tl("sellHandPermission"));
+            throw new Exception(user.tl("sellHandPermission"));
         } else if ((args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("invent") || args[0].equalsIgnoreCase("all")) && !user.isAuthorized("essentials.sell.bulk")) {
-            throw new Exception(tl("sellBulkPermission"));
+            throw new Exception(user.tl("sellBulkPermission"));
         }
 
         List<ItemStack> is = ess.getItemDb().getMatching(user, args);
@@ -60,9 +58,9 @@ public class Commandsell extends EssentialsCommand {
         }
         if (count != 1) {
             if (args[0].equalsIgnoreCase("blocks")) {
-                user.sendMessage(tl("totalWorthBlocks", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendTl("totalWorthBlocks", type, NumberUtil.displayCurrency(totalWorth, ess));
             } else {
-                user.sendMessage(tl("totalWorthAll", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendTl("totalWorthAll", type, NumberUtil.displayCurrency(totalWorth, ess));
             }
         }
     }
@@ -72,12 +70,12 @@ public class Commandsell extends EssentialsCommand {
         BigDecimal worth = ess.getWorth().getPrice(ess, is);
 
         if (worth == null) {
-            throw new Exception(tl("itemCannotBeSold"));
+            throw new Exception(user.tl("itemCannotBeSold"));
         }
 
         if (amount <= 0) {
             if (!isBulkSell) {
-                user.sendMessage(tl("itemSold", NumberUtil.displayCurrency(BigDecimal.ZERO, ess), BigDecimal.ZERO, is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(worth, ess)));
+                user.sendTl("itemSold", NumberUtil.displayCurrency(BigDecimal.ZERO, ess), BigDecimal.ZERO, is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(worth, ess));
             }
             return BigDecimal.ZERO;
         }
@@ -95,8 +93,8 @@ public class Commandsell extends EssentialsCommand {
         user.getBase().updateInventory();
         Trade.log("Command", "Sell", "Item", user.getName(), new Trade(ris, ess), user.getName(), new Trade(result, ess), user.getLocation(), ess);
         user.giveMoney(result);
-        user.sendMessage(tl("itemSold", NumberUtil.displayCurrency(result, ess), amount, is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(worth, ess)));
-        logger.log(Level.INFO, tl("itemSoldConsole", user.getDisplayName(), is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)));
+        user.sendTl("itemSold", NumberUtil.displayCurrency(result, ess), amount, is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(worth, ess));
+        logger.log(Level.INFO, user.tl("itemSoldConsole", user.getDisplayName(), is.getType().toString().toLowerCase(Locale.ENGLISH), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)));
         return result;
     }
 

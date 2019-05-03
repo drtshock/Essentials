@@ -8,8 +8,6 @@ import org.bukkit.Server;
 
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsudo extends EssentialsLoopCommand {
     public Commandsudo() {
@@ -30,7 +28,7 @@ public class Commandsudo extends EssentialsLoopCommand {
         final String command = getFinalArg(arguments, 0);
         boolean multiple = !sender.isPlayer() ? true : ess.getUser(sender.getPlayer()).isAuthorized("essentials.sudo.multiple");
 
-        sender.sendMessage(tl("sudoRun", args[0], command, ""));
+        sender.sendTl("sudoRun", args[0], command, "");
         loopOnlinePlayers(server, sender, multiple, multiple, args[0], new String[]{command});
     }
 
@@ -41,7 +39,7 @@ public class Commandsudo extends EssentialsLoopCommand {
         }
 
         if (user.isAuthorized("essentials.sudo.exempt") && sender.isPlayer()) {
-            sender.sendMessage(tl("sudoExempt", user.getName()));
+            sender.sendTl("sudoExempt", user.getName());
             return;
         }
 
@@ -58,7 +56,7 @@ public class Commandsudo extends EssentialsLoopCommand {
                     try {
                         user.getBase().chat("/" + command);
                     } catch (Exception e) {
-                        sender.sendMessage(tl("errorCallingCommand", command));
+                        sender.sendTl("errorCallingCommand", command);
                     }
                 }
             }

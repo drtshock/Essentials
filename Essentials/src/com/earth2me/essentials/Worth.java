@@ -75,7 +75,7 @@ public class Worth implements IConf {
      */
     public int getAmount(IEssentials ess, User user, ItemStack is, String[] args, boolean isBulkSell) throws Exception {
         if (is == null || is.getType() == Material.AIR) {
-            throw new Exception(tl("itemSellAir"));
+            throw new Exception(user.tl("itemSellAir"));
         }
 
         int amount = 0;
@@ -95,7 +95,7 @@ public class Worth implements IConf {
         boolean requireStack = ess.getSettings().isTradeInStacks(is.getType());
 
         if (requireStack && !stack) {
-            throw new Exception(tl("itemMustBeStacked"));
+            throw new Exception(user.tl("itemMustBeStacked"));
         }
 
         int max = 0;
@@ -118,9 +118,9 @@ public class Worth implements IConf {
         }
         if (amount > max || amount < 1) {
             if (!isBulkSell) {
-                user.sendMessage(tl("itemNotEnough2"));
-                user.sendMessage(tl("itemNotEnough3"));
-                throw new Exception(tl("itemNotEnough1"));
+                user.sendTl("itemNotEnough2");
+                user.sendTl("itemNotEnough3");
+                throw new Exception(user.tl("itemNotEnough1"));
             } else {
                 return amount;
             }

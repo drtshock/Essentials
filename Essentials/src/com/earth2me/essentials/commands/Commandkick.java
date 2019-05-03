@@ -32,18 +32,18 @@ public class Commandkick extends EssentialsCommand {
             }
 
             if (target.isAuthorized("essentials.kick.exempt")) {
-                throw new Exception(tl("kickExempt"));
+                throw new Exception(user.tl("kickExempt"));
             }
         }
 
-        String kickReason = args.length > 1 ? getFinalArg(args, 1) : tl("kickDefault");
+        String kickReason = args.length > 1 ? getFinalArg(args, 1) : target.tl("kickDefault");
         kickReason = FormatUtil.replaceFormat(kickReason.replace("\\n", "\n").replace("|", "\n"));
 
         target.getBase().kickPlayer(kickReason);
         final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
 
         server.getLogger().log(Level.INFO, tl("playerKicked", senderName, target.getName(), kickReason));
-        ess.broadcastMessage("essentials.kick.notify", tl("playerKicked", senderName, target.getName(), kickReason));
+        ess.broadcastTl("essentials.kick.notify", "playerKicked", senderName, target.getName(), kickReason);
     }
 
     @Override

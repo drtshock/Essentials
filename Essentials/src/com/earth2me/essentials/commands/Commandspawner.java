@@ -14,8 +14,6 @@ import org.bukkit.block.CreatureSpawner;
 
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandspawner extends EssentialsCommand {
     public Commandspawner() {
@@ -25,14 +23,14 @@ public class Commandspawner extends EssentialsCommand {
     @Override
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 1 || args[0].length() < 2) {
-            throw new NotEnoughArgumentsException(tl("mobsAvailable", StringUtil.joinList(Mob.getMobList())));
+            throw new NotEnoughArgumentsException(user.tl("mobsAvailable", StringUtil.joinList(Mob.getMobList())));
         }
 
         final Location target = LocationUtil.getTarget(user.getBase());
         Material MOB_SPAWNER = EnumUtil.getMaterial("SPAWNER", "MOB_SPAWNER");
 
         if (target == null || target.getBlock().getType() != MOB_SPAWNER) {
-            throw new Exception(tl("mobSpawnTarget"));
+            throw new Exception(user.tl("mobSpawnTarget"));
         }
 
         String name = args[0];
@@ -41,13 +39,13 @@ public class Commandspawner extends EssentialsCommand {
         Mob mob = null;
         mob = Mob.fromName(name);
         if (mob == null) {
-            throw new Exception(tl("invalidMob"));
+            throw new Exception(user.tl("invalidMob"));
         }
         if (ess.getSettings().getProtectPreventSpawn(mob.getType().toString().toLowerCase(Locale.ENGLISH))) {
-            throw new Exception(tl("disabledToSpawnMob"));
+            throw new Exception(user.tl("disabledToSpawnMob"));
         }
         if (!user.isAuthorized("essentials.spawner." + mob.name.toLowerCase(Locale.ENGLISH))) {
-            throw new Exception(tl("noPermToSpawnMob"));
+            throw new Exception(user.tl("noPermToSpawnMob"));
         }
         if (args.length > 1) {
             if (NumberUtil.isInt(args[1])) {
@@ -62,10 +60,10 @@ public class Commandspawner extends EssentialsCommand {
             spawner.setDelay(delay);
             spawner.update();
         } catch (Throwable ex) {
-            throw new Exception(tl("mobSpawnError"), ex);
+            throw new Exception(user.tl("mobSpawnError"), ex);
         }
         charge.charge(user);
-        user.sendMessage(tl("setSpawner", mob.name));
+        user.sendTl("setSpawner", mob.name);
 
     }
 }

@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandlightning extends EssentialsLoopCommand {
     int power = 5;
@@ -44,14 +42,14 @@ public class Commandlightning extends EssentialsLoopCommand {
 
     @Override
     protected void updatePlayer(final Server server, final CommandSource sender, final User matchUser, final String[] args) {
-        sender.sendMessage(tl("lightningUse", matchUser.getDisplayName()));
+        sender.sendTl("lightningUse", matchUser.getDisplayName());
         final LightningStrike strike = matchUser.getBase().getWorld().strikeLightningEffect(matchUser.getBase().getLocation());
 
         if (!matchUser.isGodModeEnabled()) {
             matchUser.getBase().damage(power, strike);
         }
         if (ess.getSettings().warnOnSmite()) {
-            matchUser.sendMessage(tl("lightningSmited"));
+            matchUser.sendTl("lightningSmited");
         }
     }
 

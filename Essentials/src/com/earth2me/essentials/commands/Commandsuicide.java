@@ -4,8 +4,6 @@ import com.earth2me.essentials.User;
 import org.bukkit.Server;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsuicide extends EssentialsCommand {
     public Commandsuicide() {
@@ -21,8 +19,8 @@ public class Commandsuicide extends EssentialsCommand {
         if (user.getBase().getHealth() > 0) {
             user.getBase().setHealth(0);
         }
-        user.sendMessage(tl("suicideMessage"));
+        user.sendTl("suicideMessage");
         user.setDisplayNick();
-        ess.broadcastMessage(user, tl("suicideSuccess", user.getDisplayName()));
+        ess.broadcastMessage(user, user.tl("suicideSuccess", user.getDisplayName()));
     }
 }

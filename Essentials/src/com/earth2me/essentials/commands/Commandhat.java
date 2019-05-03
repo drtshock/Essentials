@@ -11,8 +11,6 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandhat extends EssentialsCommand {
     public Commandhat() {
@@ -25,12 +23,12 @@ public class Commandhat extends EssentialsCommand {
             final PlayerInventory inv = user.getBase().getInventory();
             final ItemStack head = inv.getHelmet();
             if (head == null || head.getType() == Material.AIR) {
-                user.sendMessage(tl("hatEmpty"));
+                user.sendTl("hatEmpty");
             } else {
                 final ItemStack air = new ItemStack(Material.AIR);
                 inv.setHelmet(air);
                 InventoryWorkaround.addItems(user.getBase().getInventory(), head);
-                user.sendMessage(tl("hatRemoved"));
+                user.sendTl("hatRemoved");
             }
         } else {
             final ItemStack hand = user.getItemInHand();
@@ -40,12 +38,12 @@ public class Commandhat extends EssentialsCommand {
                     final ItemStack head = inv.getHelmet();
                     inv.setHelmet(hand);
                     inv.setItemInHand(head);
-                    user.sendMessage(tl("hatPlaced"));
+                    user.sendTl("hatPlaced");
                 } else {
-                    user.sendMessage(tl("hatArmor"));
+                    user.sendTl("hatArmor");
                 }
             } else {
-                user.sendMessage(tl("hatFail"));
+                user.sendTl("hatFail");
             }
         }
     }

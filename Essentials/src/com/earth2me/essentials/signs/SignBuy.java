@@ -19,14 +19,14 @@ public class SignBuy extends EssentialsSign {
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         validateTrade(sign, 1, 2, player, ess);
-        validateTrade(sign, 3, ess);
+        validateTrade(sign, 3, player, ess);
         return true;
     }
 
     @Override
     protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException, MaxMoneyException {
         Trade items = getTrade(sign, 1, 2, player, ess);
-        Trade charge = getTrade(sign, 3, ess);
+        Trade charge = getTrade(player, sign, 3, ess);
 
         // Check if the player is trying to buy in bulk.
         if (ess.getSettings().isAllowBulkBuySell() && player.getBase().isSneaking()) {

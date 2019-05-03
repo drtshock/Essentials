@@ -8,8 +8,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class SignFree extends EssentialsSign {
     public SignFree() {
@@ -36,7 +34,7 @@ public class SignFree extends EssentialsSign {
         final ItemStack item = getItemMeta(itemStack, sign.getLine(3), ess);
 
         if (item.getType() == Material.AIR) {
-            throw new SignException(tl("cantSpawnItem", "Air"));
+            throw new SignException(player.tl("cantSpawnItem", "Air"));
         }
 
         item.setAmount(item.getType().getMaxStackSize());

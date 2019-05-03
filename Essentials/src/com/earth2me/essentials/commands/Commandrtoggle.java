@@ -4,8 +4,6 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 public class Commandrtoggle extends EssentialsToggleCommand {
     public Commandrtoggle() {
         super("rtoggle", "essentials.rtoggle.others");
@@ -29,9 +27,9 @@ public class Commandrtoggle extends EssentialsToggleCommand {
 
         user.setLastMessageReplyRecipient(enabled);
 
-        user.sendMessage(!enabled ? tl("replyLastRecipientDisabled") : tl("replyLastRecipientEnabled"));
+        user.sendTl(!enabled ? "replyLastRecipientDisabled" : "replyLastRecipientEnabled");
         if (!sender.isPlayer() || !user.getBase().equals(sender.getPlayer())) {
-            sender.sendMessage(!enabled ? tl("replyLastRecipientDisabledFor", user.getDisplayName()) : tl("replyLastRecipientEnabledFor", user.getDisplayName()));
+            sender.sendTl(!enabled ? "replyLastRecipientDisabledFor" : "replyLastRecipientEnabledFor", user.getDisplayName());
         }
     }
 }

@@ -6,8 +6,6 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandignore extends EssentialsCommand {
     public Commandignore() {
@@ -22,7 +20,7 @@ public class Commandignore extends EssentialsCommand {
                 sb.append(s).append(" ");
             }
             String ignoredList = sb.toString().trim();
-            user.sendMessage(ignoredList.length() > 0 ? tl("ignoredList", ignoredList) : tl("noIgnored"));
+            user.sendMessage(ignoredList.length() > 0 ? user.tl("ignoredList", ignoredList) : user.tl("noIgnored"));
         } else {
             User player;
             try {
@@ -34,13 +32,13 @@ public class Commandignore extends EssentialsCommand {
                 throw new PlayerNotFoundException();
             }
             if (player.isIgnoreExempt()) {
-                user.sendMessage(tl("ignoreExempt"));
+                user.sendTl("ignoreExempt");
             } else if (user.isIgnoredPlayer(player)) {
                 user.setIgnoredPlayer(player, false);
-                user.sendMessage(tl("unignorePlayer", player.getName()));
+                user.sendTl("unignorePlayer", player.getName());
             } else {
                 user.setIgnoredPlayer(player, true);
-                user.sendMessage(tl("ignorePlayer", player.getName()));
+                user.sendTl("ignorePlayer", player.getName());
             }
         }
     }

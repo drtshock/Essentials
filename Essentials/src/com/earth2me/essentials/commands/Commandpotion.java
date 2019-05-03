@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import org.bukkit.DyeColor;
 
 import com.google.common.collect.Lists;
 import com.earth2me.essentials.MetaItemStack;
@@ -11,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -21,8 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static com.earth2me.essentials.I18n.tl;
 
 import net.ess3.nms.refl.ReflUtil;
 
@@ -44,7 +40,7 @@ public class Commandpotion extends EssentialsCommand {
                     potionslist.add(entry.getKey());
                 }
             }
-            throw new NotEnoughArgumentsException(tl("potions", StringUtil.joinList(potionslist.toArray())));
+            throw new NotEnoughArgumentsException(user.tl("potions", StringUtil.joinList(potionslist.toArray())));
         }
         
         boolean holdingPotion = stack.getType() == Material.POTION;
@@ -72,14 +68,14 @@ public class Commandpotion extends EssentialsCommand {
                         pmeta = (PotionMeta) mStack.getItemStack().getItemMeta();
                         stack.setItemMeta(pmeta);
                     } else {
-                        user.sendMessage(tl("invalidPotion"));
+                        user.sendTl("invalidPotion");
                         throw new NotEnoughArgumentsException();
                     }
                 }
             }
 
         } else {
-            throw new Exception(tl("holdPotion"));
+            throw new Exception(user.tl("holdPotion"));
         }
     }
 

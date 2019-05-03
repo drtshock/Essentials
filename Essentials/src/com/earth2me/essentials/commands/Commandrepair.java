@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandrepair extends EssentialsCommand {
     public Commandrepair() {
@@ -41,11 +39,11 @@ public class Commandrepair extends EssentialsCommand {
     public void repairHand(User user) throws Exception {
         final ItemStack item = user.getItemInHand();
         if (item == null || item.getType().isBlock() || item.getDurability() == 0) {
-            throw new Exception(tl("repairInvalidType"));
+            throw new Exception(user.tl("repairInvalidType"));
         }
 
         if (!item.getEnchantments().isEmpty() && !ess.getSettings().getRepairEnchanted() && !user.isAuthorized("essentials.repair.enchanted")) {
-            throw new Exception(tl("repairEnchanted"));
+            throw new Exception(user.tl("repairEnchanted"));
         }
 
         final String itemName = item.getType().toString().toLowerCase(Locale.ENGLISH);
@@ -53,11 +51,11 @@ public class Commandrepair extends EssentialsCommand {
 
         charge.isAffordableFor(user);
 
-        repairItem(item);
+        repairItem(user, item);
 
         charge.charge(user);
         user.getBase().updateInventory();
-        user.sendMessage(tl("repair", itemName.replace('_', ' ')));
+        user.sendTl("repair", itemName.replace('_', ' '));
     }
 
     public void repairAll(User user) throws Exception {
@@ -70,20 +68,20 @@ public class Commandrepair extends EssentialsCommand {
 
         user.getBase().updateInventory();
         if (repaired.isEmpty()) {
-            throw new Exception(tl("repairNone"));
+            throw new Exception(user.tl("repairNone"));
         } else {
-            user.sendMessage(tl("repair", StringUtil.joinList(repaired)));
+            user.sendTl("repair", StringUtil.joinList(repaired));
         }
     }
 
-    private void repairItem(final ItemStack item) throws Exception {
+    private void repairItem(IUser user, final ItemStack item) throws Exception {
         final Material material = item.getType();
         if (material.isBlock() || material.getMaxDurability() < 1) {
-            throw new Exception(tl("repairInvalidType"));
+            throw new Exception(user.tl("repairInvalidType"));
         }
 
         if (item.getDurability() == 0) {
-            throw new Exception(tl("repairAlreadyFixed"));
+            throw new Exception(user.tl("repairAlreadyFixed"));
         }
 
         item.setDurability((short) 0);
@@ -109,7 +107,7 @@ public class Commandrepair extends EssentialsCommand {
             }
 
             try {
-                repairItem(item);
+                repairItem(user, item);
             } catch (Exception e) {
                 continue;
             }

@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandback extends EssentialsCommand {
     public Commandback() {
@@ -51,14 +49,14 @@ public class Commandback extends EssentialsCommand {
         }
 
         for (Player player : players) {
-            sender.sendMessage(tl("backOther", player.getName()));
+            sender.sendTl("backOther", player.getName());
             teleportBack(sender, ess.getUser(player));
         }
     }
 
     private void teleportBack(CommandSource sender, User user) throws Exception {
         if (user.getLastLocation() == null) {
-            throw new Exception(tl("noLocationFound"));
+            throw new Exception(sender.tl("noLocationFound"));
         }
 
         String lastWorldName = user.getLastLocation().getWorld().getName();
@@ -68,11 +66,11 @@ public class Commandback extends EssentialsCommand {
             requester = ess.getUser(sender.getPlayer());
 
             if (user.getWorld() != user.getLastLocation().getWorld() && this.ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + lastWorldName)) {
-                throw new Exception(tl("noPerm", "essentials.worlds." + lastWorldName));
+                throw new Exception(sender.tl("noPerm", "essentials.worlds." + lastWorldName));
             }
 
             if (!requester.isAuthorized("essentials.back.into." + lastWorldName)) {
-                throw new Exception(tl("noPerm", "essentials.back.into." + lastWorldName));
+                throw new Exception(sender.tl("noPerm", "essentials.back.into." + lastWorldName));
             }
         }
 

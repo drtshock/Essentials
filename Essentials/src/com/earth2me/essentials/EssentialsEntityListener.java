@@ -143,7 +143,7 @@ public class EssentialsEntityListener implements Listener {
         final User user = ess.getUser(event.getEntity());
         if (user.isAuthorized("essentials.back.ondeath") && !ess.getSettings().isCommandDisabled("back")) {
             user.setLastLocation();
-            user.sendMessage(tl("backAfterDeath"));
+            user.sendMessage(user.tl( "backAfterDeath"));
         }
         if (!ess.getSettings().areDeathMessagesEnabled()) {
             event.setDeathMessage("");

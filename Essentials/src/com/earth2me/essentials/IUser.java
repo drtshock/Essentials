@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -104,6 +105,10 @@ public interface IUser {
 
     void sendMessage(String message);
 
+    void sendTl(String string, Object... objects);
+
+    String tl(String string, Object... objects);
+
     /*
      * UserData
      */
@@ -148,13 +153,13 @@ public interface IUser {
     Map<String, Object> getConfigMap();
 
     Map<String, Object> getConfigMap(String node);
-    
+
     Map<Pattern, Long> getCommandCooldowns();
 
     Date getCommandCooldownExpiry(String label);
-    
+
     void addCommandCooldown(Pattern pattern, Date expiresAt, boolean save);
-    
+
     boolean clearCommandCooldown(Pattern pattern);
 
     /*
@@ -169,19 +174,19 @@ public interface IUser {
     String getAfkMessage();
 
     void setAfkMessage(final String message);
-    
+
     long getAfkSince();
-    
+
     boolean isAcceptingPay();
-    
+
     void setAcceptingPay(boolean acceptingPay);
-    
+
     boolean isPromptingPayConfirm();
-    
+
     void setPromptingPayConfirm(boolean prompt);
-    
+
     boolean isPromptingClearConfirm();
-    
+
     void setPromptingClearConfirm(boolean prompt);
 
     boolean isLastMessageReplyRecipient();
@@ -189,4 +194,10 @@ public interface IUser {
     void setLastMessageReplyRecipient(boolean enabled);
 
     Map<User, BigDecimal> getConfirmingPayments();
+
+    Locale getApplicableLocale();
+
+    Locale getLocale();
+
+    void setLocale(Locale locale);
 }

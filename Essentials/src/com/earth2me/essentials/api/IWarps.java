@@ -1,5 +1,6 @@
 package com.earth2me.essentials.api;
 
+import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.IConf;
 import com.earth2me.essentials.IUser;
 import com.earth2me.essentials.commands.WarpNotFoundException;
@@ -43,8 +44,20 @@ public interface IWarps extends IConf {
      * @param name - Name of warp
      *
      * @throws Exception
+     * @deprecated Use {@link #removeWarp(CommandSource, String)}
      */
+    @Deprecated
     void removeWarp(String name) throws Exception;
+
+    /**
+     * Delete a warp from the warp DB
+     *
+     * @param sender - The one who wants to remove the warp
+     * @param name - Name of warp
+     *
+     * @throws Exception
+     */
+    void removeWarp(CommandSource sender, String name) throws Exception;
 
     /**
      * Set a warp

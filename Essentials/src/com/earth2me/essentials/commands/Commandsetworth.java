@@ -6,8 +6,6 @@ import com.earth2me.essentials.utils.FloatUtil;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsetworth extends EssentialsCommand {
     public Commandsetworth() {
@@ -32,7 +30,7 @@ public class Commandsetworth extends EssentialsCommand {
         }
 
         ess.getWorth().setPrice(ess, stack, FloatUtil.parseDouble(price));
-        user.sendMessage(tl("worthSet"));
+        user.sendTl("worthSet");
     }
 
     @Override
@@ -43,6 +41,6 @@ public class Commandsetworth extends EssentialsCommand {
 
         ItemStack stack = ess.getItemDb().get(args[0]);
         ess.getWorth().setPrice(ess, stack, FloatUtil.parseDouble(args[1]));
-        sender.sendMessage(tl("worthSet"));
+        sender.sendTl("worthSet");
     }
 }

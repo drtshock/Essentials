@@ -4,8 +4,6 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandmsgtoggle extends EssentialsToggleCommand {
     public Commandmsgtoggle() {
@@ -30,9 +28,9 @@ public class Commandmsgtoggle extends EssentialsToggleCommand {
 
         user.setIgnoreMsg(enabled);
 
-        user.sendMessage(!enabled ? tl("msgEnabled") : tl("msgDisabled"));
+        user.sendMessage(!enabled ? user.tl("msgEnabled") : user.tl("msgDisabled"));
         if (!sender.isPlayer() || !user.getBase().equals(sender.getPlayer())) {
-            sender.sendMessage(!enabled ? tl("msgEnabledFor", user.getDisplayName()) : tl("msgDisabledFor", user.getDisplayName()));
+            sender.sendMessage(!enabled ? user.tl("msgEnabledFor", user.getDisplayName()) : user.tl("msgDisabledFor", user.getDisplayName()));
         }
     }
 }

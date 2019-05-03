@@ -14,8 +14,6 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import java.util.*;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandcondense extends EssentialsCommand {
     public Commandcondense() {
@@ -50,9 +48,9 @@ public class Commandcondense extends EssentialsCommand {
         user.getBase().updateInventory();
 
         if (didConvert) {
-            user.sendMessage(tl("itemsConverted"));
+            user.sendTl("itemsConverted");
         } else {
-            user.sendMessage(tl("itemsNotConverted"));
+            user.sendTl("itemsNotConverted");
             throw new NoChargeException();
         }
     }

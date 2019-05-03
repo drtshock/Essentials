@@ -1,6 +1,7 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.utils.FormatUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import java.util.*;
@@ -10,7 +11,12 @@ import static com.earth2me.essentials.I18n.tl;
 
 public class PlayerList {
     // Cosmetic list formatting
+    @Deprecated
     public static String listUsers(final IEssentials ess, final List<User> users, final String seperator) {
+        return listUsers(ess, new CommandSource(Bukkit.getConsoleSender()), users, seperator);
+    }
+
+    public static String listUsers(final IEssentials ess, final CommandSource sender, final List<User> users, final String seperator) {
         final StringBuilder groupString = new StringBuilder();
         Collections.sort(users);
         boolean needComma = false;
@@ -20,10 +26,10 @@ public class PlayerList {
             }
             needComma = true;
             if (user.isAfk()) {
-                groupString.append(tl("listAfkTag"));
+                groupString.append(sender.tl("listAfkTag"));
             }
             if (user.isHidden()) {
-                groupString.append(tl("listHiddenTag"));
+                groupString.append(sender.tl("listHiddenTag"));
             }
             user.setDisplayNick();
             groupString.append(user.getDisplayName());
@@ -32,24 +38,28 @@ public class PlayerList {
         return groupString.toString();
     }
 
-    // Produce a user summary: There are 5 out of maximum 10 players online.
+    @Deprecated
     public static String listSummary(final IEssentials ess, final User user, final boolean showHidden) {
+        return listSummary(ess, new CommandSource(user), showHidden);
+    }
+
+    public static String listSummary(final IEssentials ess, final CommandSource sender, final boolean showHidden) {
         Server server = ess.getServer();
         int playerHidden = 0;
         int hiddenCount = 0;
         for (User onlinePlayer : ess.getOnlineUsers()) {
-            if (onlinePlayer.isHidden() || (user != null && !user.getBase().canSee(onlinePlayer.getBase()))) {
+            if (onlinePlayer.isHidden() || (sender.getUser() != null && !sender.getUser().getBase().canSee(onlinePlayer.getBase()))) {
                 playerHidden++;
-                if (showHidden || user.getBase().canSee(onlinePlayer.getBase())) {
+                if (showHidden || sender.getUser().getBase().canSee(onlinePlayer.getBase())) {
                     hiddenCount++;
                 }
             }
         }
         String online;
         if (hiddenCount > 0) {
-            online = tl("listAmountHidden", ess.getOnlinePlayers().size() - playerHidden, hiddenCount, server.getMaxPlayers());
+            online = sender.tl("listAmountHidden", ess.getOnlinePlayers().size() - playerHidden, hiddenCount, server.getMaxPlayers());
         } else {
-            online = tl("listAmount", ess.getOnlinePlayers().size() - playerHidden, server.getMaxPlayers());
+            online = sender.tl("listAmount", ess.getOnlinePlayers().size() - playerHidden, server.getMaxPlayers());
         }
         return online;
     }
@@ -98,25 +108,35 @@ public class PlayerList {
     }
 
     // Output a playerlist of just a single group, /list <groupname>
+    @Deprecated
     public static String listGroupUsers(final IEssentials ess, final Map<String, List<User>> playerList, final String groupName) throws Exception {
+        return listGroupUsers(ess, new CommandSource(Bukkit.getConsoleSender()), playerList, groupName);
+    }
+
+    public static String listGroupUsers(final IEssentials ess, final CommandSource sender, final Map<String, List<User>> playerList, final String groupName) throws Exception {
         final List<User> users = getMergedList(ess, playerList, groupName);
         final List<User> groupUsers = playerList.get(groupName);
         if (groupUsers != null && !groupUsers.isEmpty()) {
             users.addAll(groupUsers);
         }
         if (users == null || users.isEmpty()) {
-            throw new Exception(tl("groupDoesNotExist"));
+            throw new Exception(sender.tl("groupDoesNotExist"));
         }
         final StringBuilder displayGroupName = new StringBuilder();
         displayGroupName.append(Character.toTitleCase(groupName.charAt(0)));
         displayGroupName.append(groupName.substring(1));
-        return outputFormat(displayGroupName.toString(), listUsers(ess, users, ", "));
+        return outputFormat(sender, displayGroupName.toString(), listUsers(ess, users, ", "));
     }
 
     // Build the output string
+    @Deprecated
     public static String outputFormat(final String group, final String message) {
+        return outputFormat(new CommandSource(Bukkit.getConsoleSender()), group, message);
+    }
+
+    public static String outputFormat(final CommandSource sender, final String group, final String message) {
         final StringBuilder outputString = new StringBuilder();
-        outputString.append(tl("listGroupTag", FormatUtil.replaceFormat(group)));
+        outputString.append(sender.tl("listGroupTag", FormatUtil.replaceFormat(group)));
         outputString.append(message);
         return outputString.toString();
     }

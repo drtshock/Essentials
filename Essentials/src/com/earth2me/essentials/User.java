@@ -126,7 +126,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             cooldownTime.add(Calendar.SECOND, (int) cooldown);
             cooldownTime.add(Calendar.MILLISECOND, (int) ((cooldown * 1000.0) % 1000.0));
             if (cooldownTime.after(now) && !isAuthorized("essentials.heal.cooldown.bypass")) {
-                throw new Exception(tl("timeBeforeHeal", DateUtil.formatDateDiff(cooldownTime.getTimeInMillis())));
+                throw new Exception(tl("timeBeforeHeal", DateUtil.formatDateDiff(getSource(), cooldownTime.getTimeInMillis())));
             }
         }
         setLastHealTimestamp(now.getTimeInMillis());
@@ -145,7 +145,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         setMoney(getMoney().add(value));
         sendMessage(tl("addedToAccount", NumberUtil.displayCurrency(value, ess)));
         if (initiator != null) {
-            initiator.sendMessage(tl("addedToOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess)));
+            initiator.sendTl("addedToOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess));
         }
     }
 
@@ -159,7 +159,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             setMoney(getMoney().subtract(value));
             reciever.setMoney(reciever.getMoney().add(value));
             sendMessage(tl("moneySentTo", NumberUtil.displayCurrency(value, ess), reciever.getDisplayName()));
-            reciever.sendMessage(tl("moneyRecievedFrom", NumberUtil.displayCurrency(value, ess), getDisplayName()));
+            reciever.sendTl("moneyRecievedFrom", NumberUtil.displayCurrency(value, ess), getDisplayName());
         } else {
             throw new ChargeException(tl("notEnoughMoney", NumberUtil.displayCurrency(value, ess)));
         }
@@ -182,7 +182,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         }
         sendMessage(tl("takenFromAccount", NumberUtil.displayCurrency(value, ess)));
         if (initiator != null) {
-            initiator.sendMessage(tl("takenFromOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess)));
+            initiator.sendTl("takenFromOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess));
         }
     }
 
@@ -599,7 +599,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
             for (User user : ess.getOnlineUsers()) {
                 if (user.isAuthorized("essentials.kick.notify")) {
-                    user.sendMessage(tl("playerKicked", Console.NAME, getName(), kickReason));
+                    user.sendTl("playerKicked", Console.NAME, getName(), kickReason);
                 }
             }
         }
@@ -800,6 +800,16 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     @Override
+    public void sendTl(String string, Object... objects) {
+        sendMessage(tl(string, objects));
+    }
+
+    @Override
+    public String tl(String string, Object... objects) {
+        return I18n.tl(getApplicableLocale(), string, objects);
+    }
+
+    @Override
     public int compareTo(final User other) {
         return FormatUtil.stripFormat(getDisplayName()).compareToIgnoreCase(FormatUtil.stripFormat(other.getDisplayName()));
     }
@@ -820,7 +830,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public CommandSource getSource() {
-        return new CommandSource(getBase());
+        return new CommandSource(this);
     }
 
     @Override
@@ -868,6 +878,25 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public Map<User, BigDecimal> getConfirmingPayments() {
         return confirmingPayments;
+    }
+
+    @Override
+    public Locale getApplicableLocale() {
+        if (!ess.getSettings().changeLocale()) {
+            return ess.getI18n().getCurrentLocale();
+        }
+
+        Locale locale = super.getLocale();
+        if (locale == null) {
+            if (getBase() != null) {
+                String clientLocale = ess.getPlayerLocaleProvider().getLocale(getBase());
+                if (clientLocale != null) {
+                    return I18n.getLocale(clientLocale);
+                }
+            }
+            return ess.getI18n().getCurrentLocale();
+        }
+        return locale;
     }
 
     public String getConfirmingClearCommand() {

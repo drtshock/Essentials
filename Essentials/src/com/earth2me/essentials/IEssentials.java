@@ -49,6 +49,14 @@ public interface IEssentials extends Plugin {
 
     int broadcastMessage(String permission, String message);
 
+    int broadcastTl(String string, Object... objects);
+
+    int broadcastTl(IUser sender, String string, Object... objects);
+
+    int broadcastTl(CommandSource sender, String string, Object... objects);
+
+    int broadcastTl(String permission, String string, Object... objects);
+
     ISettings getSettings();
 
     BukkitScheduler getScheduler();

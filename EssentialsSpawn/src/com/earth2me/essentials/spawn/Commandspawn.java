@@ -11,8 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandspawn extends EssentialsCommand {
     public Commandspawn() {
@@ -27,7 +25,7 @@ public class Commandspawn extends EssentialsCommand {
             final User otherUser = getPlayer(server, user, args, 0);
             respawn(user.getSource(), user, otherUser, charge);
             if (!otherUser.equals(user)) {
-                otherUser.sendMessage(tl("teleportAtoB", user.getDisplayName(), "spawn"));
+                otherUser.sendTl("teleportAtoB", user.getDisplayName(), "spawn");
             }
         } else {
             respawn(user.getSource(), user, user, charge);
@@ -42,14 +40,14 @@ public class Commandspawn extends EssentialsCommand {
         }
         final User user = getPlayer(server, args, 0, true, false);
         respawn(sender, null, user, null);
-        user.sendMessage(tl("teleportAtoB", Console.NAME, "spawn"));
+        user.sendTl("teleportAtoB", Console.NAME, "spawn");
 
     }
 
     private void respawn(final CommandSource sender, final User teleportOwner, final User teleportee, final Trade charge) throws Exception {
         final SpawnStorage spawns = (SpawnStorage) this.module;
         final Location spawn = spawns.getSpawn(teleportee.getGroup());
-        sender.sendMessage(tl("teleporting", spawn.getWorld().getName(), spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ()));
+        sender.sendTl("teleporting", spawn.getWorld().getName(), spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ());
         if (teleportOwner == null) {
             teleportee.getTeleport().now(spawn, false, TeleportCause.COMMAND);
         } else {

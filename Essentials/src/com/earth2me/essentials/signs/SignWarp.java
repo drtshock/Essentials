@@ -4,9 +4,8 @@ import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
+import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
-import static com.earth2me.essentials.I18n.tl;
 
 
 public class SignWarp extends EssentialsSign {
@@ -16,12 +15,12 @@ public class SignWarp extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
-        validateTrade(sign, 3, ess);
+        validateTrade(sign, 3, player, ess);
         final String warpName = sign.getLine(1);
 
         if (warpName.isEmpty()) {
-            sign.setLine(1, "§c<Warp name>");
-            throw new SignException(tl("invalidSignLine", 1));
+            sign.setLine(1, ChatColor.RED + "<Warp name>");
+            throw new SignException(player.tl("invalidSignLine", 1));
         } else {
             try {
                 ess.getWarps().getWarp(warpName);
@@ -30,7 +29,7 @@ public class SignWarp extends EssentialsSign {
             }
             final String group = sign.getLine(2);
             if ("Everyone".equalsIgnoreCase(group) || "Everybody".equalsIgnoreCase(group)) {
-                sign.setLine(2, "§2Everyone");
+                sign.setLine(2, ChatColor.GREEN + "Everyone");
             }
             return true;
         }
@@ -43,15 +42,15 @@ public class SignWarp extends EssentialsSign {
 
         if (!group.isEmpty()) {
             if (!"§2Everyone".equals(group) && !player.inGroup(group)) {
-                throw new SignException(tl("warpUsePermission"));
+                throw new SignException(player.tl("warpUsePermission"));
             }
         } else {
             if (ess.getSettings().getPerWarpPermission() && !player.isAuthorized("essentials.warps." + warpName)) {
-                throw new SignException(tl("warpUsePermission"));
+                throw new SignException(player.tl("warpUsePermission"));
             }
         }
 
-        final Trade charge = getTrade(sign, 3, ess);
+        final Trade charge = getTrade(player, sign, 3, ess);
         try {
             player.getTeleport().warp(player, warpName, charge, TeleportCause.PLUGIN);
             Trade.log("Sign", "Warp", "Interact", username, null, username, charge, sign.getBlock().getLocation(), ess);

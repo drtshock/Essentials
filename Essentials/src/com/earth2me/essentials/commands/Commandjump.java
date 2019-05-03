@@ -11,8 +11,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 // This method contains an undocumented sub command #EasterEgg
 public class Commandjump extends EssentialsCommand {
     public Commandjump() {
@@ -41,7 +39,7 @@ public class Commandjump extends EssentialsCommand {
             loc.setPitch(cloc.getPitch());
             loc.setY(loc.getY() + 1);
         } catch (NullPointerException ex) {
-            throw new Exception(tl("jumpError"), ex);
+            throw new Exception(user.tl("jumpError"), ex);
         }
 
         final Trade charge = new Trade(this.getName(), ess);

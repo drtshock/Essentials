@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commanddelwarp extends EssentialsCommand {
     public Commanddelwarp() {
@@ -21,8 +19,8 @@ public class Commanddelwarp extends EssentialsCommand {
             throw new NotEnoughArgumentsException();
         }
 
-        ess.getWarps().removeWarp(args[0]);
-        sender.sendMessage(tl("deleteWarp", args[0]));
+        ess.getWarps().removeWarp(sender, args[0]);
+        sender.sendTl("deleteWarp", args[0]);
     }
 
     @Override

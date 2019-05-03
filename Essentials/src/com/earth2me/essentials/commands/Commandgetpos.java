@@ -8,8 +8,6 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandgetpos extends EssentialsCommand {
     public Commandgetpos() {
@@ -36,14 +34,14 @@ public class Commandgetpos extends EssentialsCommand {
     }
 
     private void outputPosition(final CommandSource sender, final Location coords, final Location distance) {
-        sender.sendMessage(tl("currentWorld", coords.getWorld().getName()));
-        sender.sendMessage(tl("posX", coords.getBlockX()));
-        sender.sendMessage(tl("posY", coords.getBlockY()));
-        sender.sendMessage(tl("posZ", coords.getBlockZ()));
-        sender.sendMessage(tl("posYaw", (coords.getYaw() + 360) % 360));
-        sender.sendMessage(tl("posPitch", coords.getPitch()));
+        sender.sendTl("currentWorld", coords.getWorld().getName());
+        sender.sendTl("posX", coords.getBlockX());
+        sender.sendTl("posY", coords.getBlockY());
+        sender.sendTl("posZ", coords.getBlockZ());
+        sender.sendTl("posYaw", (coords.getYaw() + 360) % 360);
+        sender.sendTl("posPitch", coords.getPitch());
         if (distance != null && coords.getWorld().equals(distance.getWorld())) {
-            sender.sendMessage(tl("distance", coords.distance(distance)));
+            sender.sendTl("distance", coords.distance(distance));
         }
     }
 

@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandwarp extends EssentialsCommand {
     private static final int WARPS_PER_PAGE = 20;
@@ -31,7 +29,7 @@ public class Commandwarp extends EssentialsCommand {
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         if (args.length == 0 || args[0].matches("[0-9]+")) {
             if (!user.isAuthorized("essentials.warp.list")) {
-                throw new Exception(tl("warpListPermission"));
+                throw new Exception(user.tl("warpListPermission"));
             }
             warpList(user.getSource(), args, user);
             throw new NoChargeException();
@@ -67,7 +65,7 @@ public class Commandwarp extends EssentialsCommand {
         final List<String> warpNameList = getAvailableWarpsFor(user);
 
         if (warpNameList.isEmpty()) {
-            throw new Exception(tl("noWarpsDefined"));
+            throw new Exception(user.tl("noWarpsDefined"));
         }
         int page = 1;
         if (args.length > 0 && NumberUtil.isInt(args[0])) {
@@ -84,10 +82,10 @@ public class Commandwarp extends EssentialsCommand {
         final String warpList = StringUtil.joinList(warpNameList.subList(warpPage, warpPage + Math.min(warpNameList.size() - warpPage, WARPS_PER_PAGE)));
 
         if (warpNameList.size() > WARPS_PER_PAGE) {
-            sender.sendMessage(tl("warpsCount", warpNameList.size(), page, maxPages));
-            sender.sendMessage(tl("warpList", warpList));
+            sender.sendTl("warpsCount", warpNameList.size(), page, maxPages);
+            sender.sendTl("warpList", warpList);
         } else {
-            sender.sendMessage(tl("warps", warpList));
+            sender.sendTl("warps", warpList);
         }
     }
 
@@ -98,7 +96,7 @@ public class Commandwarp extends EssentialsCommand {
         final Trade charge = new Trade(fullCharge, ess);
         charge.isAffordableFor(owner);
         if (ess.getSettings().getPerWarpPermission() && !owner.isAuthorized("essentials.warps." + name)) {
-            throw new Exception(tl("warpUsePermission"));
+            throw new Exception(owner.tl("warpUsePermission"));
         }
         owner.getTeleport().warp(user, name, charge, TeleportCause.COMMAND);
     }

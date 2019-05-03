@@ -43,9 +43,9 @@ public class Commandeco extends EssentialsLoopCommand {
 
         if (cmd == Commandeco.EcoCommands.RESET || cmd == Commandeco.EcoCommands.SET) {
             if (args[1].contentEquals("**")) {
-                server.broadcastMessage(tl("resetBalAll", NumberUtil.displayCurrency(amount, ess)));
+                ess.broadcastTl("resetBalAll", NumberUtil.displayCurrency(amount, ess));
             } else if (args[1].contentEquals("*")) {
-                server.broadcastMessage(tl("resetBal", NumberUtil.displayCurrency(amount, ess)));
+                ess.broadcastTl("resetBal", NumberUtil.displayCurrency(amount, ess));
             }
         }
     }
@@ -79,9 +79,9 @@ public class Commandeco extends EssentialsLoopCommand {
             } catch (MaxMoneyException ex) {
                 // Take shouldn't be able to throw a max money exception
             }
-            player.sendMessage(tl("takenFromAccount", NumberUtil.displayCurrency(player.getMoney(), ess)));
+            player.sendTl("takenFromAccount", NumberUtil.displayCurrency(player.getMoney(), ess));
         } else {
-            throw new ChargeException(tl("insufficientFunds"));
+            throw new ChargeException(player.tl("insufficientFunds"));
         }
     }
 
@@ -91,9 +91,9 @@ public class Commandeco extends EssentialsLoopCommand {
         boolean underMinimum = (amount.compareTo(minBalance) < 0);
         boolean aboveMax = (amount.compareTo(maxBalance) > 0);
         player.setMoney(underMinimum ? minBalance : aboveMax ? maxBalance : amount);
-        player.sendMessage(tl("setBal", NumberUtil.displayCurrency(player.getMoney(), ess)));
+        player.sendTl("setBal", NumberUtil.displayCurrency(player.getMoney(), ess));
         if (sender != null) {
-            sender.sendMessage(tl("setBalOthers", player.getDisplayName(), NumberUtil.displayCurrency(player.getMoney(), ess)));
+            sender.sendTl("setBalOthers", player.getDisplayName(), NumberUtil.displayCurrency(player.getMoney(), ess));
         }
     }
 

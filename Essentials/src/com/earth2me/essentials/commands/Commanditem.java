@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commanditem extends EssentialsCommand {
     public Commanditem() {
@@ -30,7 +28,7 @@ public class Commanditem extends EssentialsCommand {
 
         final String itemname = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", "");
         if (!user.canSpawnItem(stack.getType())) {
-            throw new Exception(tl("cantSpawnItem", itemname));
+            throw new Exception(user.tl("cantSpawnItem", itemname));
         }
 
         try {
@@ -47,7 +45,7 @@ public class Commanditem extends EssentialsCommand {
 
         MetaItemStack metaStack = new MetaItemStack(stack);
         if (!metaStack.canSpawn(ess)) {
-            throw new Exception(tl("unableToSpawnItem", itemname));
+            throw new Exception(user.tl("unableToSpawnItem", itemname));
         }
 
         if (args.length > 2) {
@@ -60,11 +58,11 @@ public class Commanditem extends EssentialsCommand {
 
 
         if (stack.getType() == Material.AIR) {
-            throw new Exception(tl("cantSpawnItem", "Air"));
+            throw new Exception(user.tl("cantSpawnItem", "Air"));
         }
 
         final String displayName = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace('_', ' ');
-        user.sendMessage(tl("itemSpawn", stack.getAmount(), displayName));
+        user.sendTl("itemSpawn", stack.getAmount(), displayName);
         if (user.isAuthorized("essentials.oversizedstacks")) {
             InventoryWorkaround.addOversizedItems(user.getBase().getInventory(), ess.getSettings().getOversizedStackSize(), stack);
         } else {

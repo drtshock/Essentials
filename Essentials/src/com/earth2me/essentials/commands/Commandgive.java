@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandgive extends EssentialsCommand {
     public Commandgive() {
@@ -34,7 +32,7 @@ public class Commandgive extends EssentialsCommand {
         final String itemname = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", "");
 
         if (sender.isPlayer() && !ess.getUser(sender.getPlayer()).canSpawnItem(stack.getType())) {
-            throw new Exception(tl("cantSpawnItem", itemname));
+            throw new Exception(sender.tl("cantSpawnItem", itemname));
         }
 
         final User giveTo = getPlayer(server, sender, args, 0);
@@ -56,7 +54,7 @@ public class Commandgive extends EssentialsCommand {
 
         MetaItemStack metaStack = new MetaItemStack(stack);
         if (!metaStack.canSpawn(ess)) {
-            throw new Exception(tl("unableToSpawnItem", itemname));
+            throw new Exception(sender.tl("unableToSpawnItem", itemname));
         }
 
         if (args.length > 3) {
@@ -75,11 +73,11 @@ public class Commandgive extends EssentialsCommand {
         }
 
         if (stack.getType() == Material.AIR) {
-            throw new Exception(tl("cantSpawnItem", "Air"));
+            throw new Exception(sender.tl("cantSpawnItem", "Air"));
         }
 
         final String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace('_', ' ');
-        sender.sendMessage(tl("giveSpawn", stack.getAmount(), itemName, giveTo.getDisplayName()));
+        sender.sendTl("giveSpawn", stack.getAmount(), itemName, giveTo.getDisplayName());
 
         Map<Integer, ItemStack> leftovers;
 
@@ -96,7 +94,7 @@ public class Commandgive extends EssentialsCommand {
                 World w = giveTo.getWorld();
                 w.dropItemNaturally(giveTo.getLocation(), item);
             } else {
-                sender.sendMessage(tl("giveSpawnFailure", item.getAmount(), itemName, giveTo.getDisplayName()));
+                sender.sendTl("giveSpawnFailure", item.getAmount(), itemName, giveTo.getDisplayName());
             }
         }
 

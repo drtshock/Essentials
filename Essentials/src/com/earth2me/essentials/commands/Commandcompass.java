@@ -3,8 +3,6 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandcompass extends EssentialsCommand {
     public Commandcompass() {
@@ -16,24 +14,24 @@ public class Commandcompass extends EssentialsCommand {
         final int bearing = (int) (user.getLocation().getYaw() + 180 + 360) % 360;
         String dir;
         if (bearing < 23) {
-            dir = tl("north");
+            dir = user.tl("north");
         } else if (bearing < 68) {
-            dir = tl("northEast");
+            dir = user.tl("northEast");
         } else if (bearing < 113) {
-            dir = tl("east");
+            dir = user.tl("east");
         } else if (bearing < 158) {
-            dir = tl("southEast");
+            dir = user.tl("southEast");
         } else if (bearing < 203) {
-            dir = tl("south");
+            dir = user.tl("south");
         } else if (bearing < 248) {
-            dir = tl("southWest");
+            dir = user.tl("southWest");
         } else if (bearing < 293) {
-            dir = tl("west");
+            dir = user.tl("west");
         } else if (bearing < 338) {
-            dir = tl("northWest");
+            dir = user.tl("northWest");
         } else {
-            dir = tl("north");
+            dir = user.tl("north");
         }
-        user.sendMessage(tl("compassBearing", dir, bearing));
+        user.sendTl("compassBearing", dir, bearing);
     }
 }

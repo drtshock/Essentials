@@ -12,8 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandnuke extends EssentialsCommand {
     public Commandnuke() {
@@ -38,7 +36,7 @@ public class Commandnuke extends EssentialsCommand {
             if (player == null) {
                 continue;
             }
-            player.sendMessage(tl("nuke"));
+            ess.getUser(player).sendTl("nuke");
             final Location loc = player.getLocation();
             final World world = loc.getWorld();
             for (int x = -10; x <= 10; x += 5) {

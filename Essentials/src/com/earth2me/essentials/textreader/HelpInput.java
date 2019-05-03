@@ -28,7 +28,7 @@ public class HelpInput implements IText {
         String pluginName = "";
         String pluginNameLow = "";
         if (!match.equalsIgnoreCase("")) {
-            lines.add(tl("helpMatching", match));
+            lines.add(user.tl("helpMatching", match));
         }
 
         for (Plugin p : ess.getServer().getPluginManager().getPlugins()) {
@@ -41,7 +41,7 @@ public class HelpInput implements IText {
                 if (pluginNameLow.equals(match)) {
                     lines.clear();
                     newLines.clear();
-                    lines.add(tl("helpFrom", p.getDescription().getName()));
+                    lines.add(user.tl("helpFrom", p.getDescription().getName()));
                 }
                 final boolean isOnWhitelist = user.isAuthorized("essentials.help." + pluginNameLow);
 
@@ -54,7 +54,7 @@ public class HelpInput implements IText {
                         if (pluginNameLow.contains("essentials")) {
                             final String node = "essentials." + k.getKey();
                             if (!ess.getSettings().isCommandDisabled(k.getKey()) && user.isAuthorized(node)) {
-                                pluginLines.add(tl("helpLine", k.getKey(), k.getValue().get(DESCRIPTION)));
+                                pluginLines.add(user.tl("helpLine", k.getKey(), k.getValue().get(DESCRIPTION)));
                             }
                         } else {
                             if (ess.getSettings().showNonEssCommandsInHelp()) {
@@ -66,7 +66,7 @@ public class HelpInput implements IText {
                                     permissions = value.get(PERMISSIONS);
                                 }
                                 if (isOnWhitelist || user.isAuthorized("essentials.help." + pluginNameLow + "." + k.getKey())) {
-                                    pluginLines.add(tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
+                                    pluginLines.add(user.tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
                                 } else if (permissions instanceof List && !((List<Object>) permissions).isEmpty()) {
                                     boolean enabled = false;
                                     for (Object o : (List<Object>) permissions) {
@@ -76,15 +76,15 @@ public class HelpInput implements IText {
                                         }
                                     }
                                     if (enabled) {
-                                        pluginLines.add(tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
+                                        pluginLines.add(user.tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
                                     }
                                 } else if (permissions instanceof String && !"".equals(permissions)) {
                                     if (user.isAuthorized(permissions.toString())) {
-                                        pluginLines.add(tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
+                                        pluginLines.add(user.tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
                                     }
                                 } else {
                                     if (!ess.getSettings().hidePermissionlessHelp()) {
-                                        pluginLines.add(tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
+                                        pluginLines.add(user.tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
                                     }
                                 }
                             }
@@ -98,7 +98,7 @@ public class HelpInput implements IText {
                         break;
                     }
                     if (match.equalsIgnoreCase("")) {
-                        lines.add(tl("helpPlugin", pluginName, pluginNameLow));
+                        lines.add(user.tl("helpPlugin", pluginName, pluginNameLow));
                     }
                 }
             } catch (NullPointerException ex) {

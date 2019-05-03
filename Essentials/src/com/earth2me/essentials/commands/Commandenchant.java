@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandenchant extends EssentialsCommand {
     public Commandenchant() {
@@ -32,7 +30,7 @@ public class Commandenchant extends EssentialsCommand {
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         final ItemStack stack = user.getItemInHand();
         if (stack == null || stack.getType() == Material.AIR) {
-            throw new Exception(tl("nothingInHand"));
+            throw new Exception(user.tl("nothingInHand"));
         }
         if (args.length == 0) {
             final Set<String> enchantmentslist = new TreeSet<>();
@@ -43,7 +41,7 @@ public class Commandenchant extends EssentialsCommand {
                     //enchantmentslist.add(enchantmentName);
                 }
             }
-            throw new NotEnoughArgumentsException(tl("enchantments", StringUtil.joinList(enchantmentslist.toArray())));
+            throw new NotEnoughArgumentsException(user.tl("enchantments", StringUtil.joinList(enchantmentslist.toArray())));
         }
 
         int level = 1;
@@ -65,9 +63,9 @@ public class Commandenchant extends EssentialsCommand {
         user.getBase().updateInventory();
         final String enchantmentName = enchantment.getName().toLowerCase(Locale.ENGLISH);
         if (level == 0) {
-            user.sendMessage(tl("enchantmentRemoved", enchantmentName.replace('_', ' ')));
+            user.sendTl("enchantmentRemoved", enchantmentName.replace('_', ' '));
         } else {
-            user.sendMessage(tl("enchantmentApplied", enchantmentName.replace('_', ' ')));
+            user.sendTl("enchantmentApplied", enchantmentName.replace('_', ' '));
         }
     }
 

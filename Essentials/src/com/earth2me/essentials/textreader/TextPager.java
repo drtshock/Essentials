@@ -37,7 +37,7 @@ public class TextPager {
                 if (onePage) {
                     return;
                 }
-                sender.sendMessage(tl("infoChapter"));
+                sender.sendTl("infoChapter");
                 final StringBuilder sb = new StringBuilder();
                 boolean first = true;
                 for (String string : chapters) {
@@ -71,7 +71,7 @@ public class TextPager {
 
                 int pages = end / 9 + (end % 9 > 0 ? 1 : 0);
                 if (page > pages) {
-                    sender.sendMessage(tl("infoUnknownChapter"));
+                    sender.sendTl("infoUnknownChapter");
                     return;
                 }
                 if (!onePage && commandName != null) {
@@ -84,13 +84,13 @@ public class TextPager {
                     } else {
                         content.append(I18n.capitalCase(commandName));
                     }
-                    sender.sendMessage(tl("infoPages", page, pages, content));
+                    sender.sendTl("infoPages", page, pages, content);
                 }
                 for (int i = start; i < end && i < start + (onePage ? 20 : 9); i++) {
                     sender.sendMessage("§r" + lines.get(i));
                 }
                 if (!onePage && page < pages && commandName != null) {
-                    sender.sendMessage(tl("readNextPage", commandName, page + 1));
+                    sender.sendTl("readNextPage", commandName, page + 1);
                 }
                 return;
             }
@@ -111,7 +111,7 @@ public class TextPager {
 
         //This checks to see if we have the chapter in the index
         if (!bookmarks.containsKey(pageStr.toLowerCase(Locale.ENGLISH))) {
-            sender.sendMessage(tl("infoUnknownChapter"));
+            sender.sendTl("infoUnknownChapter");
             return;
         }
 
@@ -133,13 +133,13 @@ public class TextPager {
             StringBuilder content = new StringBuilder();
             content.append(I18n.capitalCase(commandName)).append(": ");
             content.append(pageStr);
-            sender.sendMessage(tl("infoChapterPages", content, page, pages));
+            sender.sendTl("infoChapterPages", content, page, pages);
         }
         for (int i = start; i < chapterend && i < start + (onePage ? 20 : 9); i++) {
             sender.sendMessage("§r" + lines.get(i));
         }
         if (!onePage && page < pages && commandName != null) {
-            sender.sendMessage(tl("readNextPage", commandName, pageStr + " " + (page + 1)));
+            sender.sendTl("readNextPage", commandName, pageStr + " " + (page + 1));
         }
     }
 }

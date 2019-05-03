@@ -43,7 +43,7 @@ public class EssentialsSign {
             // they won't change it to §1[Signname]
             return true;
         }
-        sign.setLine(0, tl("signFormatFail", this.signName));
+        sign.setLine(0, user.tl("signFormatFail", this.signName));
 
         final SignCreateEvent signEvent = new SignCreateEvent(sign, this, user);
         ess.getServer().getPluginManager().callEvent(signEvent);
@@ -270,12 +270,12 @@ public class EssentialsSign {
         return sign.getLine(lineNumber).trim();
     }
 
-    protected final void validateTrade(final ISign sign, final int index, final IEssentials ess) throws SignException {
+    protected final void validateTrade(final ISign sign, final int index, final User player, final IEssentials ess) throws SignException {
         final String line = getSignText(sign, index);
         if (line.isEmpty()) {
             return;
         }
-        final Trade trade = getTrade(sign, index, 0, ess);
+        final Trade trade = getTrade(player, sign, index, 0, ess);
         final BigDecimal money = trade.getMoney();
         if (money != null) {
             sign.setLine(index, NumberUtil.shortCurrency(money, ess));
@@ -285,7 +285,7 @@ public class EssentialsSign {
     protected final void validateTrade(final ISign sign, final int amountIndex, final int itemIndex, final User player, final IEssentials ess) throws SignException {
         final String itemType = getSignText(sign, itemIndex);
         if (itemType.equalsIgnoreCase("exp") || itemType.equalsIgnoreCase("xp")) {
-            int amount = getIntegerPositive(getSignText(sign, amountIndex));
+            int amount = getIntegerPositive(player, getSignText(sign, amountIndex));
             sign.setLine(amountIndex, Integer.toString(amount));
             sign.setLine(itemIndex, "exp");
             return;
@@ -303,31 +303,31 @@ public class EssentialsSign {
     protected final Trade getTrade(final ISign sign, final int amountIndex, final int itemIndex, final User player, final boolean allowId, final IEssentials ess) throws SignException {
         final String itemType = getSignText(sign, itemIndex);
         if (itemType.equalsIgnoreCase("exp") || itemType.equalsIgnoreCase("xp")) {
-            final int amount = getIntegerPositive(getSignText(sign, amountIndex));
+            final int amount = getIntegerPositive(player, getSignText(sign, amountIndex));
             return new Trade(amount, ess);
         }
         final ItemStack item = getItemStack(itemType, 1, allowId, ess);
-        final int amount = Math.min(getIntegerPositive(getSignText(sign, amountIndex)), item.getType().getMaxStackSize() * player.getBase().getInventory().getSize());
+        final int amount = Math.min(getIntegerPositive(player, getSignText(sign, amountIndex)), item.getType().getMaxStackSize() * player.getBase().getInventory().getSize());
         if (item.getType() == Material.AIR || amount < 1) {
-            throw new SignException(tl("moreThanZero"));
+            throw new SignException(player.tl("moreThanZero"));
         }
         item.setAmount(amount);
         return new Trade(item, ess);
     }
 
-    protected final void validateInteger(final ISign sign, final int index) throws SignException {
+    protected final void validateInteger(User player, final ISign sign, final int index) throws SignException {
         final String line = getSignText(sign, index);
         if (line.isEmpty()) {
             throw new SignException("Empty line " + index);
         }
-        final int quantity = getIntegerPositive(line);
+        final int quantity = getIntegerPositive(player, line);
         sign.setLine(index, Integer.toString(quantity));
     }
 
-    protected final int getIntegerPositive(final String line) throws SignException {
+    protected final int getIntegerPositive(User player, final String line) throws SignException {
         final int quantity = getInteger(line);
         if (quantity < 1) {
-            throw new SignException(tl("moreThanZero"));
+            throw new SignException(player.tl("moreThanZero"));
         }
         return quantity;
     }
@@ -378,15 +378,15 @@ public class EssentialsSign {
         return stack;
     }
 
-    protected final BigDecimal getMoney(final String line) throws SignException {
+    protected final BigDecimal getMoney(final User player, final String line) throws SignException {
         final boolean isMoney = line.matches("^[^0-9-\\.][\\.0-9]+$");
-        return isMoney ? getBigDecimalPositive(line.substring(1)) : null;
+        return isMoney ? getBigDecimalPositive(player, line.substring(1)) : null;
     }
 
-    protected final BigDecimal getBigDecimalPositive(final String line) throws SignException {
+    protected final BigDecimal getBigDecimalPositive(final User player, final String line) throws SignException {
         final BigDecimal quantity = getBigDecimal(line);
         if (quantity.compareTo(MINTRANSACTION) < 0) {
-            throw new SignException(tl("moreThanZero"));
+            throw new SignException(player.tl("moreThanZero"));
         }
         return quantity;
     }
@@ -401,27 +401,27 @@ public class EssentialsSign {
         }
     }
 
-    protected final Trade getTrade(final ISign sign, final int index, final IEssentials ess) throws SignException {
-        return getTrade(sign, index, 1, ess);
+    protected final Trade getTrade(final User player, final ISign sign, final int index, final IEssentials ess) throws SignException {
+        return getTrade(player, sign, index, 1, ess);
     }
 
-    protected final Trade getTrade(final ISign sign, final int index, final int decrement, final IEssentials ess) throws SignException {
-        return getTrade(sign, index, decrement, false, ess);
+    protected final Trade getTrade(final User player, final ISign sign, final int index, final int decrement, final IEssentials ess) throws SignException {
+        return getTrade(player, sign, index, decrement, false, ess);
     }
 
-    protected final Trade getTrade(final ISign sign, final int index, final int decrement, final boolean allowId, final IEssentials ess) throws SignException {
+    protected final Trade getTrade(final User player, final ISign sign, final int index, final int decrement, final boolean allowId, final IEssentials ess) throws SignException {
         final String line = getSignText(sign, index);
         if (line.isEmpty()) {
             return new Trade(signName.toLowerCase(Locale.ENGLISH) + "sign", ess);
         }
 
-        final BigDecimal money = getMoney(line);
+        final BigDecimal money = getMoney(player, line);
         if (money == null) {
             final String[] split = line.split("[ :]+", 2);
             if (split.length != 2) {
-                throw new SignException(tl("invalidCharge"));
+                throw new SignException(player.tl("invalidCharge"));
             }
-            final int quantity = getIntegerPositive(split[0]);
+            final int quantity = getIntegerPositive(player, split[0]);
 
             final String item = split[1].toLowerCase(Locale.ENGLISH);
             if (item.equalsIgnoreCase("times")) {

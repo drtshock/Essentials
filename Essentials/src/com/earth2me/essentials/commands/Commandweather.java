@@ -9,8 +9,6 @@ import org.bukkit.World;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandweather extends EssentialsCommand {
     public Commandweather() {
@@ -37,10 +35,10 @@ public class Commandweather extends EssentialsCommand {
 
             world.setStorm(isStorm);
             world.setWeatherDuration(Integer.parseInt(args[1]) * 20);
-            user.sendMessage(isStorm ? tl("weatherStormFor", world.getName(), args[1]) : tl("weatherSunFor", world.getName(), args[1]));
+            user.sendMessage(isStorm ? user.tl("weatherStormFor", world.getName(), args[1]) : user.tl("weatherSunFor", world.getName(), args[1]));
         } else {
             world.setStorm(isStorm);
-            user.sendMessage(isStorm ? tl("weatherStorm", world.getName()) : tl("weatherSun", world.getName()));
+            user.sendMessage(isStorm ? user.tl("weatherStorm", world.getName()) : user.tl("weatherSun", world.getName()));
         }
     }
 
@@ -54,16 +52,16 @@ public class Commandweather extends EssentialsCommand {
         final boolean isStorm = args[1].equalsIgnoreCase("storm");
         final World world = server.getWorld(args[0]);
         if (world == null) {
-            throw new Exception(tl("weatherInvalidWorld", args[0]));
+            throw new Exception(sender.tl("weatherInvalidWorld", args[0]));
         }
         if (args.length > 2) {
 
             world.setStorm(isStorm);
             world.setWeatherDuration(Integer.parseInt(args[2]) * 20);
-            sender.sendMessage(isStorm ? tl("weatherStormFor", world.getName(), args[2]) : tl("weatherSunFor", world.getName(), args[2]));
+            sender.sendMessage(isStorm ? sender.tl("weatherStormFor", world.getName(), args[2]) : sender.tl("weatherSunFor", world.getName(), args[2]));
         } else {
             world.setStorm(isStorm);
-            sender.sendMessage(isStorm ? tl("weatherStorm", world.getName()) : tl("weatherSun", world.getName()));
+            sender.sendMessage(isStorm ? sender.tl("weatherStorm", world.getName()) : sender.tl("weatherSun", world.getName()));
         }
     }
 

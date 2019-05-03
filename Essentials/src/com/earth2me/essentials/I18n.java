@@ -20,7 +20,7 @@ public class I18n implements net.ess3.api.II18n {
     private static final String MESSAGES = "messages";
     private final transient Locale defaultLocale = Locale.getDefault();
     private transient Locale currentLocale = defaultLocale;
-    private transient ResourceBundle customBundle;
+    private transient Map<Locale, ResourceBundle> customBundles = new HashMap<>();
     private transient ResourceBundle localeBundle;
     private final transient ResourceBundle defaultBundle;
     private transient Map<String, MessageFormat> messageFormatCache = new HashMap<String, MessageFormat>();
@@ -40,7 +40,6 @@ public class I18n implements net.ess3.api.II18n {
         this.ess = ess;
         defaultBundle = ResourceBundle.getBundle(MESSAGES, Locale.ENGLISH);
         localeBundle = defaultBundle;
-        customBundle = NULL_BUNDLE;
     }
 
     public void onEnable() {
@@ -56,10 +55,32 @@ public class I18n implements net.ess3.api.II18n {
         return currentLocale;
     }
 
-    private String translate(final String string) {
+    private ResourceBundle getBundle(Locale locale) {
+        if (customBundles.containsKey(locale)) {
+            return customBundles.get(locale);
+        }
+
+        ResourceBundle bundle;
+        try {
+            bundle = ResourceBundle.getBundle(MESSAGES, locale, new FileResClassLoader(I18n.class.getClassLoader(), ess));
+        } catch (MissingResourceException ex) {
+            try {
+                bundle = ResourceBundle.getBundle(MESSAGES, locale);
+            } catch (MissingResourceException ex2) {
+                bundle = NULL_BUNDLE;
+            }
+        }
+        customBundles.put(locale, bundle);
+        return bundle;
+    }
+
+    private String translate(Locale locale, final String string) {
+        if (locale == null) {
+            locale = currentLocale;
+        }
         try {
             try {
-                return customBundle.getString(string);
+                return getBundle(locale).getString(string);
             } catch (MissingResourceException ex) {
                 return localeBundle.getString(string);
             }
@@ -70,18 +91,26 @@ public class I18n implements net.ess3.api.II18n {
     }
 
     public static String tl(final String string, final Object... objects) {
+        return tl(null, string, objects);
+    }
+
+    public static String tl(final Locale locale, final String string, final Object... objects) {
         if (instance == null) {
             return "";
         }
         if (objects.length == 0) {
-            return NODOUBLEMARK.matcher(instance.translate(string)).replaceAll("'");
+            return NODOUBLEMARK.matcher(instance.translate(locale, string)).replaceAll("'");
         } else {
-            return instance.format(string, objects);
+            return instance.format(locale, string, objects);
         }
     }
 
     public String format(final String string, final Object... objects) {
-        String format = translate(string);
+        return format(null, string, objects);
+    }
+
+    public String format(final Locale locale, final String string, final Object... objects) {
+        String format = translate(locale, string);
         MessageFormat messageFormat = messageFormatCache.get(format);
         if (messageFormat == null) {
             try {
@@ -98,16 +127,7 @@ public class I18n implements net.ess3.api.II18n {
 
     public void updateLocale(final String loc) {
         if (loc != null && !loc.isEmpty()) {
-            final String[] parts = loc.split("[_\\.]");
-            if (parts.length == 1) {
-                currentLocale = new Locale(parts[0]);
-            }
-            if (parts.length == 2) {
-                currentLocale = new Locale(parts[0], parts[1]);
-            }
-            if (parts.length == 3) {
-                currentLocale = new Locale(parts[0], parts[1], parts[2]);
-            }
+            currentLocale = getLocale(loc);
         }
         ResourceBundle.clearCache();
         messageFormatCache = new HashMap<String, MessageFormat>();
@@ -119,11 +139,24 @@ public class I18n implements net.ess3.api.II18n {
             localeBundle = NULL_BUNDLE;
         }
 
-        try {
-            customBundle = ResourceBundle.getBundle(MESSAGES, currentLocale, new FileResClassLoader(I18n.class.getClassLoader(), ess));
-        } catch (MissingResourceException ex) {
-            customBundle = NULL_BUNDLE;
+        customBundles.clear();
+    }
+
+    public static Locale getLocale(String loc) {
+        if (loc == null) {
+            return instance.currentLocale;
         }
+        final String[] parts = loc.split("[_\\.]");
+        if (parts.length == 1) {
+            return new Locale(parts[0]);
+        }
+        if (parts.length == 2) {
+            return new Locale(parts[0], parts[1]);
+        }
+        if (parts.length == 3) {
+            return new Locale(parts[0], parts[1], parts[2]);
+        }
+        return instance.currentLocale;
     }
 
     public static String capitalCase(final String input) {

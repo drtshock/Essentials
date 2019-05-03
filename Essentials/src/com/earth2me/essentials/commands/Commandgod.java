@@ -5,8 +5,6 @@ import com.earth2me.essentials.User;
 import net.ess3.api.events.GodStatusChangeEvent;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandgod extends EssentialsToggleCommand {
     public Commandgod() {
@@ -40,9 +38,9 @@ public class Commandgod extends EssentialsToggleCommand {
                 user.getBase().setFoodLevel(20);
             }
 
-            user.sendMessage(tl("godMode", enabled ? tl("enabled") : tl("disabled")));
+            user.sendTl("godMode", enabled ? user.tl("enabled") : user.tl("disabled"));
             if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
-                sender.sendMessage(tl("godMode", tl(enabled ? "godEnabledFor" : "godDisabledFor", user.getDisplayName())));
+                sender.sendTl("godMode", sender.tl(enabled ? "godEnabledFor" : "godDisabledFor", user.getDisplayName()));
             }
         }
     }

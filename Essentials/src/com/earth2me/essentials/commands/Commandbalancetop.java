@@ -49,7 +49,7 @@ public class Commandbalancetop extends EssentialsCommand {
                     return;
                 }
                 if (ess.getUserMap().getUniqueUsers() > MINUSERS) {
-                    sender.sendMessage(tl("orderBalances", ess.getUserMap().getUniqueUsers()));
+                    sender.sendTl("orderBalances", ess.getUserMap().getUniqueUsers());
                 }
             } finally {
                 lock.readLock().unlock();
@@ -57,7 +57,7 @@ public class Commandbalancetop extends EssentialsCommand {
             ess.runTaskAsynchronously(new Viewer(sender, commandLabel, page, force));
         } else {
             if (ess.getUserMap().getUniqueUsers() > MINUSERS) {
-                sender.sendMessage(tl("orderBalances", ess.getUserMap().getUniqueUsers()));
+                sender.sendTl("orderBalances", ess.getUserMap().getUniqueUsers());
             }
             ess.runTaskAsynchronously(new Viewer(sender, commandLabel, page, force));
         }
@@ -68,7 +68,7 @@ public class Commandbalancetop extends EssentialsCommand {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cacheage);
         final DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        sender.sendMessage(tl("balanceTop", format.format(cal.getTime())));
+        sender.sendTl("balanceTop", format.format(cal.getTime()));
         new TextPager(cache).showPage(Integer.toString(page), null, "balancetop", sender);
     }
 

@@ -38,6 +38,7 @@ import com.google.common.collect.Iterables;
 import net.ess3.api.*;
 import net.ess3.api.IEssentials;
 import net.ess3.api.ISettings;
+import net.ess3.nms.PlayerLocaleProvider;
 import net.ess3.nms.PotionMetaProvider;
 import net.ess3.nms.SpawnEggProvider;
 import net.ess3.nms.SpawnerProvider;
@@ -45,6 +46,8 @@ import net.ess3.nms.flattened.FlatSpawnEggProvider;
 import net.ess3.nms.legacy.LegacyPotionMetaProvider;
 import net.ess3.nms.legacy.LegacySpawnEggProvider;
 import net.ess3.nms.legacy.LegacySpawnerProvider;
+import net.ess3.nms.localeapi.ApiPlayerLocaleProvider;
+import net.ess3.nms.refl.ReflPlayerLocaleProvider;
 import net.ess3.nms.refl.ReflSpawnEggProvider;
 import net.ess3.nms.updatedmeta.BasePotionDataProvider;
 import net.ess3.nms.updatedmeta.BlockMetaSpawnerProvider;
@@ -110,6 +113,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient SpawnerProvider spawnerProvider;
     private transient SpawnEggProvider spawnEggProvider;
     private transient PotionMetaProvider potionMetaProvider;
+    private transient PlayerLocaleProvider playerLocaleProvider;
     private transient Kits kits;
 
     public Essentials() {
@@ -246,6 +250,12 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                                 BasePotionDataProvider.class,
                                 LegacyPotionMetaProvider.class
                         ), "potion meta").getProvider();
+                playerLocaleProvider = new ProviderFactory<>(getLogger(),
+                        Arrays.asList(
+                                ApiPlayerLocaleProvider.class,
+                                ReflPlayerLocaleProvider.class
+                        )
+                        , "player locale").getProvider();
                 execTimer.mark("Init(Providers)");
                 reload();
 
@@ -343,7 +353,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         for (User user : getOnlineUsers()) {
             if (user.isVanished()) {
                 user.setVanished(false);
-                user.sendMessage(tl("unvanishedReload"));
+                user.sendTl("unvanishedReload");
             }
             user.stopTransaction();
         }
@@ -400,13 +410,15 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             }
         }
 
-        try {
-            // Note: The tab completer is always a player, even when tab-completing in a command block
-            User user = null;
-            if (cSender instanceof Player) {
-                user = getUser((Player) cSender);
-            }
+        // Note: The tab completer is always a player, even when tab-completing in a command block
+        User user = null;
+        if (cSender instanceof Player) {
+            user = getUser((Player) cSender);
+        }
 
+        Locale locale = user != null ? user.getApplicableLocale() : getI18n().getCurrentLocale();
+
+        try {
             CommandSource sender = new CommandSource(cSender);
 
             // Check for disabled commands
@@ -420,8 +432,8 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 cmd.setEssentials(this);
                 cmd.setEssentialsModule(module);
             } catch (Exception ex) {
-                sender.sendMessage(tl("commandNotLoaded", commandLabel));
-                LOGGER.log(Level.SEVERE, tl("commandNotLoaded", commandLabel), ex);
+                sender.sendMessage(tl(locale, "commandNotLoaded", commandLabel));
+                LOGGER.log(Level.SEVERE, tl(locale, "commandNotLoaded", commandLabel), ex);
                 return Collections.emptyList();
             }
 
@@ -444,11 +456,11 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             } catch (Exception ex) {
                 showError(sender, ex, commandLabel);
                 // Tab completion shouldn't fail
-                LOGGER.log(Level.SEVERE, tl("commandFailed", commandLabel), ex);
+                LOGGER.log(Level.SEVERE, tl(locale, "commandFailed", commandLabel), ex);
                 return Collections.emptyList();
             }
         } catch (Throwable ex) {
-            LOGGER.log(Level.SEVERE, tl("commandFailed", commandLabel), ex);
+            LOGGER.log(Level.SEVERE, tl(locale, "commandFailed", commandLabel), ex);
             return Collections.emptyList();
         }
     }
@@ -476,11 +488,12 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         }
 
         try {
-
-            User user = null;
             Block bSenderBlock = null;
+            User user = null;
+            CommandSource sender = new CommandSource(cSender);
             if (cSender instanceof Player) {
                 user = getUser((Player) cSender);
+                sender.setUser(user);
             } else if (cSender instanceof BlockCommandSender) {
                 BlockCommandSender bsender = (BlockCommandSender) cSender;
                 bSenderBlock = bsender.getBlock();
@@ -491,8 +504,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             } else if (user == null) {
                 Bukkit.getLogger().log(Level.INFO, "{0} issued server command: /{1} {2}", new Object[]{cSender.getName(), commandLabel, EssentialsCommand.getFinalArg(args, 0)});
             }
-
-            CommandSource sender = new CommandSource(cSender);
 
             // New mail notification
             if (user != null && !getSettings().isCommandDisabled("mail") && !command.getName().equals("mail") && user.isAuthorized("essentials.mail")) {
@@ -516,7 +527,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 cmd.setEssentials(this);
                 cmd.setEssentialsModule(module);
             } catch (Exception ex) {
-                sender.sendMessage(tl("commandNotLoaded", commandLabel));
+                sender.sendTl("commandNotLoaded", commandLabel);
                 LOGGER.log(Level.SEVERE, tl("commandNotLoaded", commandLabel), ex);
                 return true;
             }
@@ -524,15 +535,15 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             // Check authorization
             if (user != null && !user.isAuthorized(cmd, permissionPrefix)) {
                 LOGGER.log(Level.INFO, tl("deniedAccessCommand", user.getName()));
-                user.sendMessage(tl("noAccessCommand"));
+                sender.sendTl("noAccessCommand");
                 return true;
             }
 
             if (user != null && user.isJailed() && !user.isAuthorized(cmd, "essentials.jail.allow.")) {
                 if (user.getJailTimeout() > 0) {
-                    user.sendMessage(tl("playerJailedFor", user.getName(), DateUtil.formatDateDiff(user.getJailTimeout())));
+                    sender.sendTl("playerJailedFor", user.getName(), DateUtil.formatDateDiff(sender, user.getJailTimeout()));
                 } else {
-                    user.sendMessage(tl("jailMessage"));
+                    sender.sendTl("jailMessage");
                 }
                 return true;
             }
@@ -586,7 +597,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void showError(final CommandSource sender, final Throwable exception, final String commandLabel) {
-        sender.sendMessage(tl("errorWithMessage", exception.getMessage()));
+        sender.sendTl("errorWithMessage", exception.getMessage());
         if (getSettings().isDebug()) {
             LOGGER.log(Level.INFO, tl("errorCallingCommand", commandLabel), exception);
         }
@@ -765,18 +776,57 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         final Collection<Player> players = getOnlinePlayers();
 
         for (Player player : players) {
-            final User user = getUser(player);
-            if ((permission == null && (sender == null || !user.isIgnoredPlayer(sender))) || (permission != null && user.isAuthorized(permission))) {
-                if (keywords) {
-                    broadcast = new KeywordReplacer(broadcast, new CommandSource(player), this, false);
-                }
-                for (String messageText : broadcast.getLines()) {
-                    user.sendMessage(messageText);
-                }
-            }
+            sendBroadcast(sender != null ? sender.getSource() : null, permission, keywords, getUser(player), broadcast);
         }
 
         return players.size();
+    }
+
+    @Override
+    public int broadcastTl(final String string, final Object... objects) {
+        return broadcastTl(null, null, string, true, objects);
+    }
+
+    @Override
+    public int broadcastTl(final IUser sender, final String string, final Object... objects) {
+        return broadcastTl(sender.getSource(), null, string, false, objects);
+    }
+
+    @Override
+    public int broadcastTl(final CommandSource sender, final String string, final Object... objects) {
+        return broadcastTl(sender, null, string, false, objects);
+    }
+
+    @Override
+    public int broadcastTl(final String permission, final String string, final Object... objects) {
+        return broadcastTl(null, permission, string, false, objects);
+    }
+
+    private int broadcastTl(final CommandSource sender, final String permission, final String string, final boolean keywords, final Object... objects) {
+        if (sender != null && sender.getUser() != null && sender.getUser().isHidden()) {
+            return 0;
+        }
+
+
+        final Collection<Player> players = getOnlinePlayers();
+
+        for (Player player : players) {
+            final User user = getUser(player);
+            sendBroadcast(sender, permission, keywords, user, new SimpleTextInput(user.tl(string, objects)));
+        }
+
+        return players.size();
+    }
+
+    private void sendBroadcast(final CommandSource sender, final String permission, final boolean keywords, final User user, IText broadcast) {
+        if ((permission == null && (sender == null || sender.getUser() == null || !user.isIgnoredPlayer(sender.getUser()))) || (permission != null && user.isAuthorized(permission))) {
+            if (keywords) {
+                broadcast = new KeywordReplacer(broadcast, user.getSource(), this, false);
+            }
+            for (String messageText : broadcast.getLines()) {
+                user.sendMessage(messageText);
+            }
+        }
     }
 
     @Override
@@ -893,6 +943,11 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public PotionMetaProvider getPotionMetaProvider() {
         return potionMetaProvider;
+    }
+
+    @Override
+    public PlayerLocaleProvider getPlayerLocaleProvider() {
+        return playerLocaleProvider;
     }
 
     private static void addDefaultBackPermissionsToWorld(World w) {

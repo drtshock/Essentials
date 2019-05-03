@@ -1,8 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
-
-import com.earth2me.essentials.I18n;
 import com.earth2me.essentials.User;
 
 import org.bukkit.Server;
@@ -23,9 +20,9 @@ public class Commandpaytoggle extends EssentialsCommand {
         }
         user.setAcceptingPay(acceptingPay);
         if (acceptingPay) {
-            user.sendMessage(tl("payToggleOn"));
+            user.sendTl("payToggleOn");
         } else {
-            user.sendMessage(tl("payToggleOff"));
+            user.sendTl("payToggleOff");
         }
     }
 }

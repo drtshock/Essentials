@@ -15,8 +15,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandpay extends EssentialsLoopCommand {
     BigDecimal amount;
@@ -34,7 +32,7 @@ public class Commandpay extends EssentialsLoopCommand {
         }
         
         if (args[1].contains("-")) {
-            throw new Exception(tl("payMustBePositive"));
+            throw new Exception(user.tl("payMustBePositive"));
         }
 
         String stringAmount = args[1].replaceAll("[^0-9\\.]", "");
@@ -45,12 +43,12 @@ public class Commandpay extends EssentialsLoopCommand {
 
         amount = new BigDecimal(stringAmount);
         if (amount.compareTo(ess.getSettings().getMinimumPayAmount()) < 0) { // Check if amount is less than minimum-pay-amount
-            throw new Exception(tl("minimumPayAmount", NumberUtil.displayCurrencyExactly(ess.getSettings().getMinimumPayAmount(), ess)));
+            throw new Exception(user.tl("minimumPayAmount", NumberUtil.displayCurrencyExactly(ess.getSettings().getMinimumPayAmount(), ess)));
         }
         loopOnlinePlayers(server, user.getSource(), false, user.isAuthorized("essentials.pay.multiple"), args[0], args);
         if (informToConfirm) {
             String cmd = "/" + commandLabel + " " + StringUtil.joinList(" ", (Object[]) args);
-            user.sendMessage(tl("confirmPayment", NumberUtil.displayCurrency(amount, ess), cmd));
+            user.sendTl("confirmPayment", NumberUtil.displayCurrency(amount, ess), cmd);
         }
     }
 
@@ -59,7 +57,7 @@ public class Commandpay extends EssentialsLoopCommand {
         User user = ess.getUser(sender.getPlayer());
         try {
             if (!player.isAcceptingPay()) {
-                sender.sendMessage(tl("notAcceptingPay", player.getDisplayName()));
+                sender.sendTl("notAcceptingPay", player.getDisplayName());
                 return;
             }
             if (user.isPromptingPayConfirm() && !amount.equals(user.getConfirmingPayments().get(player))) { // checks if exists and if command needs to be repeated.
@@ -77,7 +75,7 @@ public class Commandpay extends EssentialsLoopCommand {
             user.getConfirmingPayments().remove(player);
             Trade.log("Command", "Pay", "Player", user.getName(), new Trade(amount, ess), player.getName(), new Trade(amount, ess), user.getLocation(), ess);
         } catch (MaxMoneyException ex) {
-            sender.sendMessage(tl("maxMoney"));
+            sender.sendTl("maxMoney");
             try {
                 user.setMoney(user.getMoney().add(amount));
             } catch (MaxMoneyException ignored) {

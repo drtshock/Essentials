@@ -9,8 +9,6 @@ import net.ess3.api.IEssentials;
 
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class SignKit extends EssentialsSign {
     public SignKit() {
@@ -19,7 +17,7 @@ public class SignKit extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
-        validateTrade(sign, 3, ess);
+        validateTrade(sign, 3, player, ess);
 
         final String kitName = sign.getLine(1).toLowerCase(Locale.ENGLISH).trim();
 
@@ -45,7 +43,7 @@ public class SignKit extends EssentialsSign {
         final String kitName = sign.getLine(1).toLowerCase(Locale.ENGLISH).trim();
         final String group = sign.getLine(2).trim();
         if ((!group.isEmpty() && ("§2Everyone".equals(group) || player.inGroup(group))) || (group.isEmpty() && (player.isAuthorized("essentials.kits." + kitName)))) {
-            final Trade charge = getTrade(sign, 3, ess);
+            final Trade charge = getTrade(player, sign, 3, ess);
             charge.isAffordableFor(player);
             try {
                 final Kit kit = new Kit(kitName, ess);
@@ -63,9 +61,9 @@ public class SignKit extends EssentialsSign {
             return true;
         } else {
             if (group.isEmpty()) {
-                throw new SignException(tl("noKitPermission", "essentials.kits." + kitName));
+                throw new SignException(player.tl("noKitPermission", "essentials.kits." + kitName));
             } else {
-                throw new SignException(tl("noKitGroup", group));
+                throw new SignException(player.tl("noKitGroup", group));
             }
         }
     }

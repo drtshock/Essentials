@@ -8,8 +8,6 @@ import org.bukkit.Server;
 
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsethome extends EssentialsCommand {
     public Commandsethome() {
@@ -45,15 +43,15 @@ public class Commandsethome extends EssentialsCommand {
             name = "home";
         }
         if ("bed".equals(name) || NumberUtil.isInt(name)) {
-            throw new NoSuchFieldException(tl("invalidHomeName"));
+            throw new NoSuchFieldException(user.tl("invalidHomeName"));
         }
 
         if (!ess.getSettings().isTeleportSafetyEnabled() && LocationUtil.isBlockUnsafeForUser(usersHome, location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
-            throw new Exception(tl("unsafeTeleportDestination", location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+            throw new Exception(user.tl("unsafeTeleportDestination", location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
         }
 
         usersHome.setHome(name, location);
-        user.sendMessage(tl("homeSet", user.getLocation().getWorld().getName(), user.getLocation().getBlockX(), user.getLocation().getBlockY(), user.getLocation().getBlockZ(), name));
+        user.sendTl("homeSet", user.getLocation().getWorld().getName(), user.getLocation().getBlockX(), user.getLocation().getBlockY(), user.getLocation().getBlockZ(), name);
 
     }
 
@@ -64,7 +62,7 @@ public class Commandsethome extends EssentialsCommand {
                 return false;
             }
             if (usersHome.getHomes().size() >= limit) {
-                throw new Exception(tl("maxHomes", ess.getSettings().getHomeLimit(user)));
+                throw new Exception(user.tl("maxHomes", ess.getSettings().getHomeLimit(user)));
             }
             if (limit == 1) {
                 return true;

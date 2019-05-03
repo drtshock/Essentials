@@ -244,6 +244,10 @@ commands:
     description: List all online players.
     usage: /<command> [group]
     aliases: [elist,online,eonline,playerlist,eplayerlist,plist,eplist,who,ewho]
+  locale:
+    description: Change your locale or that of another player.
+    usage: /<command> [player] <locale|none>
+    aliases: [elocale,language,elanguage,lang,elang]
   mail:
     description: Manages inter-player, intra-server mail.
     usage: /<command> [read|clear|send [to] [message]|sendall [message]]

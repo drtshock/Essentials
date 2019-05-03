@@ -9,8 +9,6 @@ import org.bukkit.Server;
 
 import java.util.logging.Level;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandunban extends EssentialsCommand {
     public Commandunban() {
@@ -31,14 +29,14 @@ public class Commandunban extends EssentialsCommand {
             final OfflinePlayer player = server.getOfflinePlayer(args[0]);
             name = player.getName();
             if (!player.isBanned()) {
-                throw new Exception(tl("playerNotFound"), e);
+                throw new Exception(sender.tl("playerNotFound"), e);
             }
             ess.getServer().getBanList(BanList.Type.NAME).pardon(name);
         }
 
         final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
-        server.getLogger().log(Level.INFO, tl("playerUnbanned", senderName, name));
+        server.getLogger().log(Level.INFO, sender.tl("playerUnbanned", senderName, name));
 
-        ess.broadcastMessage("essentials.ban.notify", tl("playerUnbanned", senderName, name));
+        ess.broadcastMessage("essentials.ban.notify", sender.tl("playerUnbanned", senderName, name));
     }
 }

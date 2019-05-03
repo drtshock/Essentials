@@ -8,8 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandunlimited extends EssentialsCommand {
     public Commandunlimited() {
@@ -48,11 +46,11 @@ public class Commandunlimited extends EssentialsCommand {
 
     private String getList(final User target) {
         final StringBuilder output = new StringBuilder();
-        output.append(tl("unlimitedItems")).append(" ");
+        output.append(target.tl("unlimitedItems")).append(" ");
         boolean first = true;
         final List<Material> items = target.getUnlimited();
         if (items.isEmpty()) {
-            output.append(tl("none"));
+            output.append(target.tl("none"));
         }
         for (Material material : items) {
             if (!first) {
@@ -72,7 +70,7 @@ public class Commandunlimited extends EssentialsCommand {
 
         final String itemname = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", "");
         if (ess.getSettings().permissionBasedItemSpawn() && (!user.isAuthorized("essentials.unlimited.item-all") && !user.isAuthorized("essentials.unlimited.item-" + itemname) && !((stack.getType() == Material.WATER_BUCKET || stack.getType() == Material.LAVA_BUCKET) && user.isAuthorized("essentials.unlimited.item-bucket")))) {
-            throw new Exception(tl("unlimitedItemPermission", itemname));
+            throw new Exception(user.tl("unlimitedItemPermission", itemname));
         }
 
         String message = "disableUnlimited";
@@ -86,9 +84,9 @@ public class Commandunlimited extends EssentialsCommand {
         }
 
         if (user != target) {
-            user.sendMessage(tl(message, itemname, target.getDisplayName()));
+            user.sendTl(message, itemname, target.getDisplayName());
         }
-        target.sendMessage(tl(message, itemname, target.getDisplayName()));
+        target.sendTl(message, itemname, target.getDisplayName());
         target.setUnlimited(stack, enableUnlimited);
 
         return true;

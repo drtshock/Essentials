@@ -7,8 +7,6 @@ import com.earth2me.essentials.messaging.IMessageRecipient;
 import com.earth2me.essentials.utils.FormatUtil;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandr extends EssentialsCommand {
     public Commandr() {
@@ -28,7 +26,7 @@ public class Commandr extends EssentialsCommand {
             User user = ess.getUser(sender.getPlayer());
 
             if (user.isMuted()) {
-                throw new Exception(user.hasMuteReason() ? tl("voiceSilencedReason", user.getMuteReason()) : tl("voiceSilenced"));
+                throw new Exception(user.hasMuteReason() ? user.tl("voiceSilencedReason", user.getMuteReason()) : user.tl("voiceSilenced"));
             }
 
             message = FormatUtil.formatMessage(user, "essentials.msg", message);
@@ -41,7 +39,7 @@ public class Commandr extends EssentialsCommand {
         final IMessageRecipient target = messageSender.getReplyRecipient();
         // Check to make sure the sender does have a quick-reply recipient
         if (target == null) {
-            throw new Exception(tl("foreverAlone"));
+            throw new Exception(sender.tl("foreverAlone"));
         }
         messageSender.sendMessage(target, message);
     }

@@ -1,7 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
-
 import com.earth2me.essentials.User;
 
 import org.bukkit.Server;
@@ -22,9 +20,9 @@ public class Commandclearinventoryconfirmtoggle extends EssentialsCommand {
         }
         user.setPromptingClearConfirm(confirmingClear);
         if (confirmingClear) {
-            user.sendMessage(tl("clearInventoryConfirmToggleOn"));
+            user.sendTl("clearInventoryConfirmToggleOn");
         } else {
-            user.sendMessage(tl("clearInventoryConfirmToggleOff"));
+            user.sendTl("clearInventoryConfirmToggleOff");
         }
         user.setConfirmingClearCommand(null);
     }

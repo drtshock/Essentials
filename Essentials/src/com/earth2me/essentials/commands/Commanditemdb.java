@@ -9,8 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commanditemdb extends EssentialsCommand {
     public Commanditemdb() {
@@ -39,23 +37,23 @@ public class Commanditemdb extends EssentialsCommand {
             itemId = itemStack.getType().getId() + ":" + itemStack.getDurability();
         }
 
-        sender.sendMessage(tl("itemType", itemStack.getType().toString(), itemId));
+        sender.sendTl("itemType", itemStack.getType().toString(), itemId);
 
         // Don't send IDs twice
-        if (!tl("itemType").contains("{1}") && !itemId.equals("none")) {
-            sender.sendMessage(tl("itemId", itemId));
+        if (!sender.tl("itemType").contains("{1}") && !itemId.equals("none")) {
+            sender.sendTl("itemId", itemId);
         }
 
         if (itemHeld && itemStack.getType() != Material.AIR) {
             int maxuses = itemStack.getType().getMaxDurability();
             int durability = ((maxuses + 1) - itemStack.getDurability());
             if (maxuses != 0) {
-                sender.sendMessage(tl("durability", Integer.toString(durability)));
+                sender.sendTl("durability", Integer.toString(durability));
             }
         }
         final String itemNameList = ess.getItemDb().names(itemStack);
         if (itemNameList != null) {
-            sender.sendMessage(tl("itemNames", ess.getItemDb().names(itemStack)));
+            sender.sendTl("itemNames", ess.getItemDb().names(itemStack));
         }
     }
 

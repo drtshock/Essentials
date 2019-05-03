@@ -5,8 +5,6 @@ import net.ess3.api.IEssentials;
 
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class SignMail extends EssentialsSign {
     public SignMail() {
@@ -17,13 +15,13 @@ public class SignMail extends EssentialsSign {
     protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final List<String> mail = player.getMails();
         if (mail.isEmpty()) {
-            player.sendMessage(tl("noNewMail"));
+            player.sendTl("noNewMail");
             return false;
         }
         for (String s : mail) {
             player.sendMessage(s);
         }
-        player.sendMessage(tl("markMailAsRead"));
+        player.sendTl("markMailAsRead");
         return true;
     }
 }

@@ -4,8 +4,6 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 import net.ess3.api.events.VanishStatusChangeEvent;
 
 
@@ -38,13 +36,13 @@ public class Commandvanish extends EssentialsToggleCommand {
         }
 
         user.setVanished(enabled);
-        user.sendMessage(tl("vanish", user.getDisplayName(), enabled ? tl("enabled") : tl("disabled")));
+        user.sendTl("vanish", user.getDisplayName(), enabled ? user.tl("enabled") : user.tl("disabled"));
 
         if (enabled) {
-            user.sendMessage(tl("vanished"));
+            user.sendTl("vanished");
         }
         if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
-            sender.sendMessage(tl("vanish", user.getDisplayName(), enabled ? tl("enabled") : tl("disabled")));
+            sender.sendTl("vanish", user.getDisplayName(), enabled ? user.tl("enabled") : user.tl("disabled"));
         }
     }
 }

@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public abstract class EssentialsCommand implements IEssentialsCommand {
     private final transient String name;
@@ -172,7 +170,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
     }
 
     protected void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
-        throw new Exception(tl("onlyPlayers", commandLabel));
+        throw new Exception(sender.tl("onlyPlayers", commandLabel));
     }
 
     @Override

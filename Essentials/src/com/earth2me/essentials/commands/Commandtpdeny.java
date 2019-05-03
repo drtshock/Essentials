@@ -3,8 +3,6 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandtpdeny extends EssentialsCommand {
     public Commandtpdeny() {
@@ -14,15 +12,15 @@ public class Commandtpdeny extends EssentialsCommand {
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         if (user.getTeleportRequest() == null) {
-            throw new Exception(tl("noPendingRequest"));
+            throw new Exception(user.tl("noPendingRequest"));
         }
         final User player = ess.getUser(user.getTeleportRequest());
         if (player == null) {
-            throw new Exception(tl("noPendingRequest"));
+            throw new Exception(user.tl("noPendingRequest"));
         }
 
-        user.sendMessage(tl("requestDenied"));
-        player.sendMessage(tl("requestDeniedFrom", user.getDisplayName()));
+        user.sendTl("requestDenied");
+        player.sendTl("requestDeniedFrom", user.getDisplayName());
         user.requestTeleport(null, false);
     }
 }

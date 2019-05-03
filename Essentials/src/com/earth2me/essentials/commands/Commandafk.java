@@ -7,8 +7,6 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandafk extends EssentialsCommand {
     public Commandafk() {
@@ -51,10 +49,10 @@ public class Commandafk extends EssentialsCommand {
     private void toggleAfk(User sender, User user, String message) throws Exception {
         if (message != null && sender != null) {
             if (sender.isMuted()) {
-                throw new Exception(sender.hasMuteReason() ? tl("voiceSilencedReason", sender.getMuteReason()) : tl("voiceSilenced"));
+                throw new Exception(sender.hasMuteReason() ? sender.tl("voiceSilencedReason", sender.getMuteReason()) : sender.tl("voiceSilenced"));
             }
             if (!sender.isAuthorized("essentials.afk.message")) {
-                throw new Exception(tl("noPermToAFKMessage"));
+                throw new Exception(sender.tl("noPermToAFKMessage"));
             }
         }
         user.setDisplayNick();
@@ -62,22 +60,22 @@ public class Commandafk extends EssentialsCommand {
         if (!user.toggleAfk()) {
             //user.sendMessage(_("markedAsNotAway"));
             if (!user.isHidden()) {
-                msg = tl("userIsNotAway", user.getDisplayName());
+                msg = "userIsNotAway";
             }
             user.updateActivity(false);
         } else {
             //user.sendMessage(_("markedAsAway"));
             if (!user.isHidden()) {
                 if (message != null) {
-                    msg = tl("userIsAwayWithMessage", user.getDisplayName(), message);
+                    msg = "userIsAwayWithMessage";
                 } else {
-                    msg = tl("userIsAway", user.getDisplayName());
+                    msg = "userIsAway";
                 }
             }
             user.setAfkMessage(message);
         }
         if (!msg.isEmpty()) {
-            ess.broadcastMessage(user, msg);
+            ess.broadcastTl(user, msg, user.getDisplayName(), message);
         }
         user.setDisplayNick(); // Set this again after toggling
     }

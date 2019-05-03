@@ -13,8 +13,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 public class Commandskull extends EssentialsCommand {
 
     private static final Material SKULL_ITEM = EnumUtil.getMaterial("PLAYER_HEAD", "SKULL_ITEM");
@@ -29,7 +27,7 @@ public class Commandskull extends EssentialsCommand {
 
         if (args.length > 0 && user.isAuthorized("essentials.skull.others")) {
             if (!args[0].matches("^[A-Za-z0-9_]+$")) {
-                throw new IllegalArgumentException(tl("alphaNames"));
+                throw new IllegalArgumentException(user.tl("alphaNames"));
             }
             owner = args[0];
         } else {
@@ -47,11 +45,11 @@ public class Commandskull extends EssentialsCommand {
             metaSkull = (SkullMeta) itemSkull.getItemMeta();
             spawn = true;
         } else {
-            throw new Exception(tl("invalidSkull"));
+            throw new Exception(user.tl("invalidSkull"));
         }
 
         if (metaSkull.hasOwner() && !user.isAuthorized("essentials.skull.modify")) {
-            throw new Exception(tl("noPermissionSkull"));
+            throw new Exception(user.tl("noPermissionSkull"));
         }
 
         metaSkull.setDisplayName("§fSkull of " + owner);
@@ -61,9 +59,9 @@ public class Commandskull extends EssentialsCommand {
 
         if (spawn) {
             InventoryWorkaround.addItems(user.getBase().getInventory(), itemSkull);
-            user.sendMessage(tl("givenSkull", owner));
+            user.sendTl("givenSkull", owner);
         } else {
-            user.sendMessage(tl("skullChanged", owner));
+            user.sendTl("skullChanged", owner);
         }
     }
 

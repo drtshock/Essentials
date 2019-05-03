@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandpweather extends EssentialsCommand {
     public static final Set<String> getAliases = new HashSet<>();
@@ -54,7 +52,7 @@ public class Commandpweather extends EssentialsCommand {
         if (sender.isPlayer()) {
             User user = ess.getUser(sender.getPlayer());
             if (user != null && (!users.contains(user) || users.size() > 1) && !user.isAuthorized("essentials.pweather.others")) {
-                user.sendMessage(tl("pWeatherOthersPermission"));
+                user.sendTl("pWeatherOthersPermission");
                 return;
             }
         }
@@ -67,14 +65,14 @@ public class Commandpweather extends EssentialsCommand {
      */
     private void getUsersWeather(final CommandSource sender, final Collection<User> users) {
         if (users.size() > 1) {
-            sender.sendMessage(tl("pWeatherPlayers"));
+            sender.sendTl("pWeatherPlayers");
         }
 
         for (User user : users) {
             if (user.getBase().getPlayerWeather() == null) {
-                sender.sendMessage(tl("pWeatherNormal", user.getName()));
+                sender.sendTl("pWeatherNormal", user.getName());
             } else {
-                sender.sendMessage(tl("pWeatherCurrent", user.getName(), user.getBase().getPlayerWeather().toString().toLowerCase(Locale.ENGLISH)));
+                sender.sendTl("pWeatherCurrent", user.getName(), user.getBase().getPlayerWeather().toString().toLowerCase(Locale.ENGLISH));
             }
         }
     }
@@ -98,16 +96,16 @@ public class Commandpweather extends EssentialsCommand {
                 user.getBase().resetPlayerWeather();
             }
 
-            sender.sendMessage(tl("pWeatherReset", msg));
+            sender.sendTl("pWeatherReset", msg);
         } else {
             if (!weatherAliases.containsKey(weatherType)) {
-                throw new NotEnoughArgumentsException(tl("pWeatherInvalidAlias"));
+                throw new NotEnoughArgumentsException(sender.tl("pWeatherInvalidAlias"));
             }
 
             for (User user : users) {
                 user.getBase().setPlayerWeather(weatherAliases.get(weatherType));
             }
-            sender.sendMessage(tl("pWeatherSet", weatherType, msg.toString()));
+            sender.sendTl("pWeatherSet", weatherType, msg.toString());
         }
     }
 

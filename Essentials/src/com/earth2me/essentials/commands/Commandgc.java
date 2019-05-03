@@ -9,8 +9,6 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.logging.Level;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandgc extends EssentialsCommand {
     public Commandgc() {
@@ -29,11 +27,11 @@ public class Commandgc extends EssentialsCommand {
             color = ChatColor.RED;
         }
 
-        sender.sendMessage(tl("uptime", DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime())));
-        sender.sendMessage(tl("tps", "" + color + NumberUtil.formatDouble(tps)));
-        sender.sendMessage(tl("gcmax", (Runtime.getRuntime().maxMemory() / 1024 / 1024)));
-        sender.sendMessage(tl("gctotal", (Runtime.getRuntime().totalMemory() / 1024 / 1024)));
-        sender.sendMessage(tl("gcfree", (Runtime.getRuntime().freeMemory() / 1024 / 1024)));
+        sender.sendTl("uptime", DateUtil.formatDateDiff(sender, ManagementFactory.getRuntimeMXBean().getStartTime()));
+        sender.sendTl("tps", "" + color + NumberUtil.formatDouble(tps));
+        sender.sendTl("gcmax", (Runtime.getRuntime().maxMemory() / 1024 / 1024));
+        sender.sendTl("gctotal", (Runtime.getRuntime().totalMemory() / 1024 / 1024));
+        sender.sendTl("gcfree", (Runtime.getRuntime().freeMemory() / 1024 / 1024));
 
         List<World> worlds = server.getWorlds();
         for (World w : worlds) {
@@ -57,7 +55,7 @@ public class Commandgc extends EssentialsCommand {
                 Bukkit.getLogger().log(Level.SEVERE, "Corrupted chunk data on world " + w, ex);
             }
 
-            sender.sendMessage(tl("gcWorld", worldType, w.getName(), w.getLoadedChunks().length, w.getEntities().size(), tileEntities));
+            sender.sendTl("gcWorld", worldType, w.getName(), w.getLoadedChunks().length, w.getEntities().size(), tileEntities);
         }
     }
 }

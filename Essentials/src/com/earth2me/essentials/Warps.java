@@ -4,6 +4,7 @@ import com.earth2me.essentials.commands.WarpNotFoundException;
 import com.earth2me.essentials.utils.StringUtil;
 import net.ess3.api.InvalidNameException;
 import net.ess3.api.InvalidWorldException;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import java.io.File;
@@ -65,7 +66,7 @@ public class Warps implements IConf, net.ess3.api.IWarps {
         if (conf == null) {
             File confFile = new File(warpsFolder, filename + ".yml");
             if (confFile.exists()) {
-                throw new Exception(tl("similarWarpExist"));
+                throw new Exception(user.tl("similarWarpExist"));
             }
             conf = new EssentialsConf(confFile);
             warpPoints.put(new StringIgnoreCase(name), conf);
@@ -76,7 +77,7 @@ public class Warps implements IConf, net.ess3.api.IWarps {
         try {
             conf.saveWithError();
         } catch (IOException ex) {
-            throw new IOException(tl("invalidWarpName"));
+            throw new IOException(user.tl("invalidWarpName"));
         }
     }
     
@@ -96,12 +97,17 @@ public class Warps implements IConf, net.ess3.api.IWarps {
     
     @Override
     public void removeWarp(String name) throws Exception {
+        removeWarp(new CommandSource(Bukkit.getConsoleSender()), name);
+    }
+
+    @Override
+    public void removeWarp(CommandSource sender, String name) throws Exception {
         EssentialsConf conf = warpPoints.get(new StringIgnoreCase(name));
         if (conf == null) {
-            throw new Exception(tl("warpNotExist"));
+            throw new Exception(sender.tl("warpNotExist"));
         }
         if (!conf.getFile().delete()) {
-            throw new Exception(tl("warpDeleteError"));
+            throw new Exception(sender.tl("warpDeleteError"));
         }
         warpPoints.remove(new StringIgnoreCase(name));
     }

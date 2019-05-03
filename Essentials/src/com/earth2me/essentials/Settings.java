@@ -790,6 +790,17 @@ public class Settings implements net.ess3.api.ISettings {
         return changeDisplayName;
     }
 
+    private boolean changeLocale = true;
+
+    private boolean _changeLocale() {
+        return config.getBoolean("change-locale", true);
+    }
+
+    @Override
+    public boolean changeLocale() {
+        return changeLocale;
+    }
+
     private boolean changePlayerListName = false;
 
     private boolean _changePlayerListName() {

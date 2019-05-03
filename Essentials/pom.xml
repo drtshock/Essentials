@@ -114,5 +114,11 @@
             <version>2.16.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>LocaleApiProvider</artifactId>
+            <version>2.16.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

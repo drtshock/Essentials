@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 public class Commandshowkit extends EssentialsCommand {
 
     public Commandshowkit() {
@@ -26,9 +24,9 @@ public class Commandshowkit extends EssentialsCommand {
         final String[] kits = args[0].toLowerCase(Locale.ENGLISH).split(",");
         for (final String kitName : kits) {
             Kit kit = new Kit(kitName, ess);
-            user.sendMessage(tl("kitContains", kitName));
+            user.sendTl("kitContains", kitName);
             for (String s : kit.getItems()) {
-                user.sendMessage(tl("kitItem", s));
+                user.sendTl("kitItem", s);
             }
         }
     }

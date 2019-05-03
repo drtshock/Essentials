@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandexp extends EssentialsCommand {
     public Commandexp() {
@@ -126,7 +124,7 @@ public class Commandexp extends EssentialsCommand {
     }
 
     private void showExp(final CommandSource sender, final User target) {
-        sender.sendMessage(tl("exp", target.getDisplayName(), SetExpFix.getTotalExperience(target.getBase()), target.getBase().getLevel(), SetExpFix.getExpUntilNextLevel(target.getBase())));
+        sender.sendTl("exp", target.getDisplayName(), SetExpFix.getTotalExperience(target.getBase()), target.getBase().getLevel(), SetExpFix.getExpUntilNextLevel(target.getBase()));
     }
 
     //TODO: Limit who can give negative exp?
@@ -158,7 +156,7 @@ public class Commandexp extends EssentialsCommand {
             amount = 0l;
         }
         SetExpFix.setTotalExperience(target.getBase(), (int) amount);
-        sender.sendMessage(tl("expSet", target.getDisplayName(), amount));
+        sender.sendTl("expSet", target.getDisplayName(), amount);
     }
 
     @Override

@@ -7,8 +7,6 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandtpaall extends EssentialsCommand {
     public Commandtpaall() {
@@ -30,7 +28,7 @@ public class Commandtpaall extends EssentialsCommand {
     }
 
     private void teleportAAllPlayers(final Server server, final CommandSource sender, final User target) {
-        sender.sendMessage(tl("teleportAAll"));
+        sender.sendTl("teleportAAll");
         for (User player : ess.getOnlineUsers()) {
             if (target == player) {
                 continue;
@@ -38,15 +36,15 @@ public class Commandtpaall extends EssentialsCommand {
             if (!player.isTeleportEnabled()) {
                 continue;
             }
-            if (sender.equals(target.getBase()) && target.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !target.isAuthorized("essentials.worlds." + target.getWorld().getName())) {
+            if (sender.getSender().equals(target.getBase()) && target.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !target.isAuthorized("essentials.worlds." + target.getWorld().getName())) {
                 continue;
             }
             try {
                 player.requestTeleport(target, true);
-                player.sendMessage(tl("teleportHereRequest", target.getDisplayName()));
-                player.sendMessage(tl("typeTpaccept"));
+                player.sendTl("teleportHereRequest", target.getDisplayName());
+                player.sendTl("typeTpaccept");
                 if (ess.getSettings().getTpaAcceptCancellation() != 0) {
-                    player.sendMessage(tl("teleportRequestTimeoutInfo", ess.getSettings().getTpaAcceptCancellation()));
+                    player.sendTl("teleportRequestTimeoutInfo", ess.getSettings().getTpaAcceptCancellation());
                 }
             } catch (Exception ex) {
                 ess.showError(sender, ex, getName());

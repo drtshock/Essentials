@@ -237,7 +237,7 @@ public class Jails extends AsyncStorageObjectHolder<com.earth2me.essentials.sett
                     LOGGER.log(Level.INFO, tl("returnPlayerToJailError", user.getName(), ex.getLocalizedMessage()));
                 }
             }
-            user.sendMessage(tl("jailMessage"));
+            user.sendTl("jailMessage");
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
@@ -258,7 +258,7 @@ public class Jails extends AsyncStorageObjectHolder<com.earth2me.essentials.sett
                     LOGGER.log(Level.INFO, tl("returnPlayerToJailError", user.getName(), ex.getLocalizedMessage()));
                 }
             }
-            user.sendMessage(tl("jailMessage"));
+            user.sendTl("jailMessage");
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.earth2me.essentials.utils;
 
+import com.earth2me.essentials.CommandSource;
+import org.bukkit.Bukkit;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
@@ -120,13 +123,25 @@ public class DateUtil {
     }
 
     public static String formatDateDiff(long date) {
+        return formatDateDiff(new CommandSource(Bukkit.getConsoleSender()), date);
+    }
+
+    public static String formatDateDiff(CommandSource sender, long date) {
         Calendar c = new GregorianCalendar();
         c.setTimeInMillis(date);
         Calendar now = new GregorianCalendar();
-        return DateUtil.formatDateDiff(now, c);
+        return DateUtil.formatDateDiff(sender, now, c);
     }
 
+    /**
+     * @deprecated Use {@link #formatDateDiff(CommandSource, Calendar, Calendar)}
+     */
+    @Deprecated
     public static String formatDateDiff(Calendar fromDate, Calendar toDate) {
+        return formatDateDiff(new CommandSource(Bukkit.getConsoleSender()), fromDate, toDate);
+    }
+
+    public static String formatDateDiff(CommandSource sender, Calendar fromDate, Calendar toDate) {
         boolean future = false;
         if (toDate.equals(fromDate)) {
             return tl("now");

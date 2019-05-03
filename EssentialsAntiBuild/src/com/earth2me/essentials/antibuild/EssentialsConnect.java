@@ -35,7 +35,7 @@ class EssentialsConnect {
 
     void alert(final User user, final String item, final String type) {
         final Location loc = user.getLocation();
-        final String warnMessage = tl("alertFormat", user.getName(), type, item, loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
+        final String warnMessage = user.tl("alertFormat", user.getName(), type, item, loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
         logger.log(Level.WARNING, warnMessage);
         for (Player p : ess.getServer().getOnlinePlayers()) {
             final User alertUser = ess.getUser(p);

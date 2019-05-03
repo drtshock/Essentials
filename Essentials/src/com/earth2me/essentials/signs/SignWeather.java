@@ -5,8 +5,6 @@ import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class SignWeather extends EssentialsSign {
     public SignWeather() {
@@ -15,7 +13,7 @@ public class SignWeather extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
-        validateTrade(sign, 2, ess);
+        validateTrade(sign, 2, player, ess);
         final String timeString = sign.getLine(1);
         if ("Sun".equalsIgnoreCase(timeString)) {
             sign.setLine(1, "§2Sun");
@@ -26,12 +24,12 @@ public class SignWeather extends EssentialsSign {
             return true;
         }
         sign.setLine(1, "§c<sun|storm>");
-        throw new SignException(tl("onlySunStorm"));
+        throw new SignException(player.tl("onlySunStorm"));
     }
 
     @Override
     protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 2, ess);
+        final Trade charge = getTrade(player, sign, 2, ess);
         charge.isAffordableFor(player);
         final String weatherString = sign.getLine(1);
         if ("§2Sun".equalsIgnoreCase(weatherString)) {
@@ -46,6 +44,6 @@ public class SignWeather extends EssentialsSign {
             Trade.log("Sign", "WeatherStorm", "Interact", username, null, username, charge, sign.getBlock().getLocation(), ess);
             return true;
         }
-        throw new SignException(tl("onlySunStorm"));
+        throw new SignException(player.tl("onlySunStorm"));
     }
 }

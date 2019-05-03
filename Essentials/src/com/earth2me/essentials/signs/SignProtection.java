@@ -18,8 +18,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 @Deprecated // This sign will be removed soon
 public class SignProtection extends EssentialsSign {
@@ -43,7 +41,7 @@ public class SignProtection extends EssentialsSign {
                 return true;
             }
         }
-        player.sendMessage(tl("signProtectInvalidLocation"));
+        player.sendTl("signProtectInvalidLocation");
         return false;
     }
 
@@ -200,7 +198,7 @@ public class SignProtection extends EssentialsSign {
             final SignProtectionState state = isBlockProtected(adjBlock, player, username, true);
 
             if ((state == SignProtectionState.ALLOWED || state == SignProtectionState.NOT_ALLOWED) && !player.isAuthorized("essentials.signs.protection.override")) {
-                player.sendMessage(tl("noPlacePermission", block.getType().toString().toLowerCase(Locale.ENGLISH)));
+                player.sendTl("noPlacePermission", block.getType().toString().toLowerCase(Locale.ENGLISH));
                 return false;
             }
         }
@@ -221,7 +219,7 @@ public class SignProtection extends EssentialsSign {
         }
 
 
-        player.sendMessage(tl("noAccessPermission", block.getType().toString().toLowerCase(Locale.ENGLISH)));
+        player.sendTl("noAccessPermission", block.getType().toString().toLowerCase(Locale.ENGLISH));
         return false;
     }
 
@@ -240,7 +238,7 @@ public class SignProtection extends EssentialsSign {
         }
 
 
-        player.sendMessage(tl("noDestroyPermission", block.getType().toString().toLowerCase(Locale.ENGLISH)));
+        player.sendTl("noDestroyPermission", block.getType().toString().toLowerCase(Locale.ENGLISH));
         return false;
     }
 

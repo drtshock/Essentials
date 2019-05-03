@@ -1,5 +1,7 @@
 package com.earth2me.essentials.messaging;
 
+import java.util.Locale;
+
 /**
  * Represents an interface for message recipients.
  */
@@ -62,6 +64,13 @@ public interface IMessageRecipient {
      * @return whether this recipient is reachable
      */
     boolean isReachable();
+
+    /**
+     * Return the locale of this message recipient
+     *
+     * @return The locale, never null
+     */
+    Locale getLocale();
 
     /**
      * Returns the {@link IMessageRecipient} this recipient should send replies to.

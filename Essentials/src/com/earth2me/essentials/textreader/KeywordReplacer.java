@@ -8,6 +8,7 @@ import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.DescParseTickFormat;
 import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -20,8 +21,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.earth2me.essentials.I18n.tl;
 
 
 public class KeywordReplacer implements IText {
@@ -119,6 +118,7 @@ public class KeywordReplacer implements IText {
 
             if (replacer == null) {
                 replacer = "";
+                Locale locale = user != null ? user.getApplicableLocale() : ess.getI18n().getCurrentLocale();
                 switch (validKeyword) {
                     case PLAYER:
                     case DISPLAYNAME:
@@ -188,7 +188,7 @@ public class KeywordReplacer implements IText {
                             for (String groupName : playerList.keySet()) {
                                 final List<User> groupUsers = playerList.get(groupName);
                                 if (groupUsers != null && !groupUsers.isEmpty()) {
-                                    outputList.put(groupName, PlayerList.listUsers(ess, groupUsers, " "));
+                                    outputList.put(groupName, PlayerList.listUsers(ess, user != null ? user.getSource() : new CommandSource(Bukkit.getConsoleSender()), groupUsers, " "));
                                 }
                             }
 
@@ -219,10 +219,10 @@ public class KeywordReplacer implements IText {
                         keywordCache.put(validKeyword, outputList);
                         break;
                     case TIME:
-                        replacer = DateFormat.getTimeInstance(DateFormat.MEDIUM, ess.getI18n().getCurrentLocale()).format(new Date());
+                        replacer = DateFormat.getTimeInstance(DateFormat.MEDIUM, locale).format(new Date());
                         break;
                     case DATE:
-                        replacer = DateFormat.getDateInstance(DateFormat.MEDIUM, ess.getI18n().getCurrentLocale()).format(new Date());
+                        replacer = DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(new Date());
                         break;
                     case WORLDTIME12:
                         if (user != null) {
@@ -236,13 +236,13 @@ public class KeywordReplacer implements IText {
                         break;
                     case WORLDDATE:
                         if (user != null) {
-                            replacer = DateFormat.getDateInstance(DateFormat.MEDIUM, ess.getI18n().getCurrentLocale()).format(DescParseTickFormat.ticksToDate(user.getWorld() == null ? 0 : user.getWorld().getFullTime()));
+                            replacer = DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(DescParseTickFormat.ticksToDate(user.getWorld() == null ? 0 : user.getWorld().getFullTime()));
                         }
                         break;
                     case COORDS:
                         if (user != null) {
                             final Location location = user.getLocation();
-                            replacer = tl("coordsKeyword", location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                            replacer = user.tl("coordsKeyword", location.getBlockX(), location.getBlockY(), location.getBlockZ());
                         }
                         break;
                     case TPS:

@@ -10,8 +10,6 @@ import org.bukkit.World;
 
 import java.util.*;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandtime extends EssentialsCommand {
     public Commandtime() {
@@ -55,7 +53,7 @@ public class Commandtime extends EssentialsCommand {
 
         final User user = ess.getUser(sender.getPlayer());
         if (user != null && !user.isAuthorized("essentials.time.set")) {
-            throw new Exception(tl("timeSetPermission"));
+            throw new Exception(sender.tl("timeSetPermission"));
         }
 
         // Parse the target time int ticks from args[0]
@@ -80,7 +78,7 @@ public class Commandtime extends EssentialsCommand {
         }
 
         for (World world : worlds) {
-            sender.sendMessage(tl("timeWorldCurrent", world.getName(), DescParseTickFormat.format(world.getTime())));
+            sender.sendTl("timeWorldCurrent", world.getName(), DescParseTickFormat.format(world.getTime()));
         }
     }
 
@@ -91,7 +89,7 @@ public class Commandtime extends EssentialsCommand {
         User user = ess.getUser(sender.getPlayer());
         for (World world : worlds) {
             if (!canUpdateWorld(user, world)) {
-                throw new Exception(tl("timeSetWorldPermission", user.getWorld().getName()));
+                throw new Exception(user.tl("timeSetWorldPermission", user.getWorld().getName()));
             }
         }
 
@@ -113,7 +111,7 @@ public class Commandtime extends EssentialsCommand {
             output.append(world.getName());
         }
 
-        sender.sendMessage(tl("timeWorldSet", DescParseTickFormat.format(ticks), output.toString()));
+        sender.sendTl("timeWorldSet", DescParseTickFormat.format(ticks), output.toString());
     }
 
     /**
@@ -145,7 +143,7 @@ public class Commandtime extends EssentialsCommand {
         }
         // We failed to understand the world target...
         else {
-            throw new Exception(tl("invalidWorld"));
+            throw new Exception(sender.tl("invalidWorld"));
         }
 
         return worlds;

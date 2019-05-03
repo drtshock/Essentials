@@ -7,8 +7,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandtpo extends EssentialsCommand {
     public Commandtpo() {
@@ -24,24 +22,24 @@ public class Commandtpo extends EssentialsCommand {
             case 1:
                 final User player = getPlayer(server, user, args, 0);
                 if (user.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + player.getWorld().getName())) {
-                    throw new Exception(tl("noPerm", "essentials.worlds." + player.getWorld().getName()));
+                    throw new Exception(user.tl("noPerm", "essentials.worlds." + player.getWorld().getName()));
                 }
                 user.getTeleport().now(player.getBase(), false, TeleportCause.COMMAND);
                 break;
 
             default:
                 if (!user.isAuthorized("essentials.tp.others")) {
-                    throw new Exception(tl("noPerm", "essentials.tp.others"));
+                    throw new Exception(user.tl("noPerm", "essentials.tp.others"));
                 }
                 final User target = getPlayer(server, user, args, 0);
                 final User toPlayer = getPlayer(server, user, args, 1);
 
                 if (target.getWorld() != toPlayer.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + toPlayer.getWorld().getName())) {
-                    throw new Exception(tl("noPerm", "essentials.worlds." + toPlayer.getWorld().getName()));
+                    throw new Exception(user.tl("noPerm", "essentials.worlds." + toPlayer.getWorld().getName()));
                 }
 
                 target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
-                target.sendMessage(tl("teleportAtoB", user.getDisplayName(), toPlayer.getDisplayName()));
+                target.sendTl("teleportAtoB", user.getDisplayName(), toPlayer.getDisplayName());
                 break;
         }
     }

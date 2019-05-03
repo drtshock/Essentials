@@ -45,7 +45,7 @@ public class Commandbroadcastworld extends EssentialsCommand {
             message = getFinalArg(args, 0);
         }
 
-        sendBroadcast(world.getName(), user.getDisplayName(), message);
+        sendBroadcast(user.getSource(), world.getName(), user.getDisplayName(), message);
     }
 
     @Override
@@ -53,27 +53,27 @@ public class Commandbroadcastworld extends EssentialsCommand {
         if (args.length < 2) {
             throw new NotEnoughArgumentsException("world");
         }
-        sendBroadcast(args[0], sender.getSender().getName(), getFinalArg(args, 1));
+        sendBroadcast(sender, args[0], sender.getSender().getName(), getFinalArg(args, 1));
     }
 
-    private void sendBroadcast(final String worldName, final String name, final String message) throws Exception {
+    private void sendBroadcast(final CommandSource sender, final String worldName, final String name, final String message) throws Exception {
         World world = ess.getWorld(worldName);
         if (world == null) {
-            throw new Exception(tl("invalidWorld"));
+            throw new Exception(sender.tl("invalidWorld"));
         }
         if (message.isEmpty()) {
             throw new NotEnoughArgumentsException();
         }
-        sendToWorld(world, tl("broadcast", FormatUtil.replaceFormat(message).replace("\\n", "\n"), name));
+        sendToWorld(world, "broadcast", FormatUtil.replaceFormat(message).replace("\\n", "\n"), name);
     }
 
-    private void sendToWorld(World world, String message) {
-        IText broadcast = new SimpleTextInput(message);
+    private void sendToWorld(World world, String string, Object... objects) {
         final Collection<Player> players = ess.getOnlinePlayers();
 
         for (Player player : players) {
             if (player.getWorld().equals(world)) {
                 final User user = ess.getUser(player);
+                IText broadcast = new SimpleTextInput(user.tl(string, objects));
                 broadcast = new KeywordReplacer(broadcast, new CommandSource(player), ess, false);
                 for (String messageText : broadcast.getLines()) {
                     user.sendMessage(messageText);

@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandgamemode extends EssentialsCommand {
     public Commandgamemode() {
@@ -61,21 +59,21 @@ public class Commandgamemode extends EssentialsCommand {
         }
 
         if (!canChangeToMode(user, gameMode)) {
-            user.sendMessage(tl("cantGamemode", gameMode.name()));
+            user.sendTl("cantGamemode", gameMode.name());
             return;
         }
 
         user.getBase().setGameMode(gameMode);
-        user.sendMessage(tl("gameMode", tl(user.getBase().getGameMode().toString().toLowerCase(Locale.ENGLISH)), user.getDisplayName()));
+        user.sendTl("gameMode", user.tl(user.getBase().getGameMode().toString().toLowerCase(Locale.ENGLISH)), user.getDisplayName());
     }
 
     private void gamemodeOtherPlayers(final Server server, final CommandSource sender, final GameMode gameMode, final String name) throws NotEnoughArgumentsException, PlayerNotFoundException {
         if (name.trim().length() < 2 || gameMode == null) {
-            throw new NotEnoughArgumentsException(tl("gameModeInvalid"));
+            throw new NotEnoughArgumentsException(sender.tl("gameModeInvalid"));
         }
 
         if (sender.isPlayer() && !canChangeToMode(ess.getUser(sender.getPlayer()), gameMode)) {
-            sender.sendMessage(tl("cantGamemode", gameMode.name()));
+            sender.sendTl("cantGamemode", gameMode.name());
             return;
         }
 
@@ -89,7 +87,7 @@ public class Commandgamemode extends EssentialsCommand {
             }
             foundUser = true;
             player.getBase().setGameMode(gameMode);
-            sender.sendMessage(tl("gameMode", tl(player.getBase().getGameMode().toString().toLowerCase(Locale.ENGLISH)), player.getDisplayName()));
+            sender.sendTl("gameMode", sender.tl(player.getBase().getGameMode().toString().toLowerCase(Locale.ENGLISH)), player.getDisplayName());
         }
         if (!foundUser) {
             throw new PlayerNotFoundException();

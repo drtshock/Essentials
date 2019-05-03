@@ -6,6 +6,8 @@ import com.earth2me.essentials.messaging.SimpleMessageRecipient;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
+import java.util.Locale;
+
 
 public final class Console implements IMessageRecipient {
     public static final String NAME = "Console";
@@ -54,11 +56,11 @@ public final class Console implements IMessageRecipient {
     @Override public boolean isReachable() {
         return true;
     }
-    
+
+
     /* ================================
      * >> DELEGATE METHODS
      * ================================ */
-
     @Override public MessageResponse sendMessage(IMessageRecipient recipient, String message) {
         return this.messageRecipient.sendMessage(recipient, message);
     }
@@ -73,5 +75,9 @@ public final class Console implements IMessageRecipient {
 
     @Override public void setReplyRecipient(IMessageRecipient recipient) {
         this.messageRecipient.setReplyRecipient(recipient);
+    }
+
+    @Override public Locale getLocale() {
+        return this.messageRecipient.getLocale();
     }
 }

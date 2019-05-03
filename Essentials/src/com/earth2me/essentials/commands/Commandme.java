@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandme extends EssentialsCommand {
     public Commandme() {
@@ -24,7 +22,7 @@ public class Commandme extends EssentialsCommand {
     @Override
     public void run(Server server, User user, String commandLabel, String[] args) throws Exception {
         if (user.isMuted()) {
-            throw new Exception(user.hasMuteReason() ? tl("voiceSilencedReason", user.getMuteReason()) : tl("voiceSilenced"));
+            throw new Exception(user.hasMuteReason() ? user.tl("voiceSilencedReason", user.getMuteReason()) : user.tl("voiceSilenced"));
         }
 
         if (args.length < 1) {
@@ -36,9 +34,8 @@ public class Commandme extends EssentialsCommand {
 
         user.setDisplayNick();
         int radius = ess.getSettings().getChatRadius();
-        String toSend = tl("action", user.getDisplayName(), message);
         if (radius < 1) {
-            ess.broadcastMessage(user, toSend);
+            ess.broadcastTl(user, "action", user.getDisplayName(), message);
             return;
         }
 
@@ -74,11 +71,11 @@ public class Commandme extends EssentialsCommand {
         }
 
         if (outList.size() < 2) {
-            user.sendMessage(tl("localNoOne"));
+            user.sendTl("localNoOne");
         }
 
         for (Player onlinePlayer : outList) {
-            onlinePlayer.sendMessage(toSend);
+            ess.getUser(onlinePlayer).sendTl("action", user.getDisplayName(), message);
         }
     }
 
@@ -91,7 +88,7 @@ public class Commandme extends EssentialsCommand {
         String message = getFinalArg(args, 0);
         message = FormatUtil.replaceFormat(message);
 
-        ess.getServer().broadcastMessage(tl("action", "@", message));
+        ess.broadcastTl(sender, "action", "@", message);
     }
 
     @Override

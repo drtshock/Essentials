@@ -1,8 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
-
-import com.earth2me.essentials.I18n;
 import com.earth2me.essentials.User;
 
 import net.ess3.api.IEssentials;
@@ -45,14 +42,14 @@ public class Commandtpacancel extends EssentialsCommand {
                 }
             }
             if (cancellations > 0) {
-                user.sendMessage(tl("teleportRequestAllCancelled", cancellations));
+                user.sendTl("teleportRequestAllCancelled", cancellations);
             } else {
-                throw new Exception(tl("noPendingRequest"));
+                throw new Exception(user.tl("noPendingRequest"));
             }
         } else {
             User targetPlayer = getPlayer(server, user, args, 0);
             if (cancelTeleportRequest(ess, targetPlayer, user)) {
-                user.sendMessage(tl("teleportRequestSpecificCancelled", targetPlayer.getName()));
+                user.sendTl("teleportRequestSpecificCancelled", targetPlayer.getName());
             }
         }
     }

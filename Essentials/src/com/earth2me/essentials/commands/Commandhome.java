@@ -7,12 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static com.earth2me.essentials.I18n.tl;
 
 
 public class Commandhome extends EssentialsCommand {
@@ -45,7 +42,7 @@ public class Commandhome extends EssentialsCommand {
                     user.getTeleport().teleport(bed, charge, TeleportCause.COMMAND);
                     throw new NoChargeException();
                 } else {
-                    throw new Exception(tl("bedMissing"));
+                    throw new Exception(user.tl("bedMissing"));
                 }
             }
             goHome(user, player, homeName.toLowerCase(Locale.ENGLISH), charge);
@@ -55,19 +52,19 @@ public class Commandhome extends EssentialsCommand {
             if (homes.isEmpty() && player.equals(user)) {
                 user.getTeleport().respawn(charge, TeleportCause.COMMAND);
             } else if (homes.isEmpty()) {
-                throw new Exception(tl("noHomeSetPlayer"));
+                throw new Exception(user.tl("noHomeSetPlayer"));
             } else if (homes.size() == 1 && player.equals(user)) {
                 goHome(user, player, homes.get(0), charge);
             } else {
                 final int count = homes.size();
                 if (user.isAuthorized("essentials.home.bed")) {
                     if (bed != null) {
-                        homes.add(tl("bed"));
+                        homes.add(user.tl("bed"));
                     } else {
-                        homes.add(tl("bedNull"));
+                        homes.add(user.tl("bedNull"));
                     }
                 }
-                user.sendMessage(tl("homes", StringUtil.joinList(homes), count, getHomeLimit(player)));
+                user.sendTl("homes", StringUtil.joinList(homes), count, getHomeLimit(player));
             }
         }
         throw new NoChargeException();
@@ -92,10 +89,10 @@ public class Commandhome extends EssentialsCommand {
             throw new NotEnoughArgumentsException();
         }
         if (user.getWorld() != loc.getWorld() && ess.getSettings().isWorldHomePermissions() && !user.isAuthorized("essentials.worlds." + loc.getWorld().getName())) {
-            throw new Exception(tl("noPerm", "essentials.worlds." + loc.getWorld().getName()));
+            throw new Exception(user.tl("noPerm", "essentials.worlds." + loc.getWorld().getName()));
         }
         user.getTeleport().teleport(loc, charge, TeleportCause.COMMAND);
-        user.sendMessage(tl("teleportHome", home));
+        user.sendTl("teleportHome", home);
     }
 
     @Override

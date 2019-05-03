@@ -163,6 +163,8 @@ public interface ISettings extends IConf {
 
     boolean changeDisplayName();
 
+    boolean changeLocale();
+
     boolean changePlayerListName();
 
     boolean isPlayerCommand(String string);

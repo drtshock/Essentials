@@ -19,13 +19,13 @@ public class SignInfo extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
-        validateTrade(sign, 3, ess);
+        validateTrade(sign, 3, player, ess);
         return true;
     }
 
     @Override
     protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 3, ess);
+        final Trade charge = getTrade(player, sign, 3, ess);
         charge.isAffordableFor(player);
 
         String chapter = sign.getLine(1);

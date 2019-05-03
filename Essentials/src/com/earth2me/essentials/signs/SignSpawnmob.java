@@ -16,14 +16,14 @@ public class SignSpawnmob extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(ISign sign, User player, String username, IEssentials ess) throws SignException, ChargeException {
-        validateInteger(sign, 1);
-        validateTrade(sign, 3, ess);
+        validateInteger(player, sign, 1);
+        validateTrade(sign, 3, player, ess);
         return true;
     }
 
     @Override
     protected boolean onSignInteract(ISign sign, User player, String username, IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 3, ess);
+        final Trade charge = getTrade(player, sign, 3, ess);
         charge.isAffordableFor(player);
 
         try {

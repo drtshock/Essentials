@@ -4,8 +4,6 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandsocialspy extends EssentialsToggleCommand {
     public Commandsocialspy() {
@@ -31,9 +29,9 @@ public class Commandsocialspy extends EssentialsToggleCommand {
         user.setSocialSpyEnabled(enabled);
 
 
-        user.sendMessage(tl("socialSpy", user.getDisplayName(), enabled ? tl("enabled") : tl("disabled")));
+        user.sendTl("socialSpy", user.getDisplayName(), enabled ? user.tl("enabled") : user.tl("disabled"));
         if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
-            sender.sendMessage(tl("socialSpy", user.getDisplayName(), enabled ? tl("enabled") : tl("disabled")));
+            sender.sendTl("socialSpy", user.getDisplayName(), enabled ? user.tl("enabled") : user.tl("disabled"));
         }
     }
 }

@@ -42,7 +42,7 @@ public class Kit {
 
     public void checkPerms(final User user) throws Exception {
         if (!user.isAuthorized("essentials.kits." + kitName)) {
-            throw new Exception(tl("noKitPermission", "essentials.kits." + kitName));
+            throw new Exception(user.tl( "noKitPermission", "essentials.kits." + kitName));
         }
     }
 
@@ -52,10 +52,10 @@ public class Kit {
         if (nextUse == 0L) {
             return;
         } else if (nextUse < 0L) {
-            user.sendMessage(tl("kitOnce"));
+            user.sendTl("kitOnce");
             throw new NoChargeException();
         } else {
-            user.sendMessage(tl("kitTimed", DateUtil.formatDateDiff(nextUse)));
+            user.sendTl("kitTimed", DateUtil.formatDateDiff(user.getSource(), nextUse));
             throw new NoChargeException();
         }
     }
@@ -85,7 +85,7 @@ public class Kit {
             // Make sure delay is valid
             delay = kit.containsKey("delay") ? ((Number) kit.get("delay")).doubleValue() : 0.0d;
         } catch (Exception e) {
-            throw new Exception(tl("kitError2"));
+            throw new Exception(user.tl( "kitError2"));
         }
 
         // When was the last kit used?
@@ -203,12 +203,12 @@ public class Kit {
             }
             user.getBase().updateInventory();
             if (spew) {
-                user.sendMessage(tl("kitInvFull"));
+                user.sendTl("kitInvFull");
             }
         } catch (Exception e) {
             user.getBase().updateInventory();
             ess.getLogger().log(Level.WARNING, e.getMessage());
-            throw new Exception(tl("kitError2"), e);
+            throw new Exception(user.tl( "kitError2"), e);
         }
     }
 }

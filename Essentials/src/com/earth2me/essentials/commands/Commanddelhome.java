@@ -4,12 +4,10 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
 
 
 public class Commanddelhome extends EssentialsCommand {
@@ -45,11 +43,11 @@ public class Commanddelhome extends EssentialsCommand {
         }
 
         if (name.equalsIgnoreCase("bed")) {
-            throw new Exception(tl("invalidHomeName"));
+            throw new Exception(user.tl("invalidHomeName"));
         }
 
         user.delHome(name.toLowerCase(Locale.ENGLISH));
-        sender.sendMessage(tl("deleteHome", name));
+        sender.sendTl("deleteHome", name);
     }
 
     @Override

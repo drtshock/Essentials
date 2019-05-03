@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandspeed extends EssentialsCommand {
     public Commandspeed() {
@@ -53,10 +51,10 @@ public class Commandspeed extends EssentialsCommand {
 
         if (isFly) {
             user.getBase().setFlySpeed(getRealMoveSpeed(speed, isFly, isBypass));
-            user.sendMessage(tl("moveSpeed", tl("flying"), speed, user.getDisplayName()));
+            user.sendTl("moveSpeed", user.tl("flying"), speed, user.getDisplayName());
         } else {
             user.getBase().setWalkSpeed(getRealMoveSpeed(speed, isFly, isBypass));
-            user.sendMessage(tl("moveSpeed", tl("walking"), speed, user.getDisplayName()));
+            user.sendTl("moveSpeed", user.tl("walking"), speed, user.getDisplayName());
         }
     }
 
@@ -72,10 +70,10 @@ public class Commandspeed extends EssentialsCommand {
             foundUser = true;
             if (isFly) {
                 matchPlayer.setFlySpeed(getRealMoveSpeed(speed, isFly, isBypass));
-                sender.sendMessage(tl("moveSpeed", tl("flying"), speed, matchPlayer.getDisplayName()));
+                sender.sendTl("moveSpeed", sender.tl("flying"), speed, matchPlayer.getDisplayName());
             } else {
                 matchPlayer.setWalkSpeed(getRealMoveSpeed(speed, isFly, isBypass));
-                sender.sendMessage(tl("moveSpeed", tl("walking"), speed, matchPlayer.getDisplayName()));
+                sender.sendTl("moveSpeed", sender.tl("walking"), speed, matchPlayer.getDisplayName());
             }
         }
         if (!foundUser) {

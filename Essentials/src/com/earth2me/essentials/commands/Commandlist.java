@@ -9,8 +9,6 @@ import org.bukkit.Server;
 
 import java.util.*;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandlist extends EssentialsCommand {
     public Commandlist() {
@@ -21,15 +19,15 @@ public class Commandlist extends EssentialsCommand {
     public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
         boolean showHidden = true;
         User user = null;
-        if (sender.isPlayer()) {
-            user = ess.getUser(sender.getPlayer());
+        if (sender.getUser() != null) {
+            user = sender.getUser();
             showHidden = user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
         }
-        sender.sendMessage(PlayerList.listSummary(ess, user, showHidden));
+        sender.sendMessage(PlayerList.listSummary(ess, sender, showHidden));
         final Map<String, List<User>> playerList = PlayerList.getPlayerLists(ess, user, showHidden);
 
         if (args.length > 0) {
-            sender.sendMessage(PlayerList.listGroupUsers(ess, playerList, args[0].toLowerCase()));
+            sender.sendMessage(PlayerList.listGroupUsers(ess, sender, playerList, args[0].toLowerCase()));
         } else {
             sendGroupedList(sender, commandLabel, playerList);
         }
@@ -67,9 +65,9 @@ public class Commandlist extends EssentialsCommand {
                     outputUserList.addAll(matchedList);
                     int limit = Integer.parseInt(groupValue);
                     if (matchedList.size() > limit) {
-                        sender.sendMessage(PlayerList.outputFormat(oConfigGroup, tl("groupNumber", matchedList.size(), commandLabel, FormatUtil.stripFormat(configGroup))));
+                        sender.sendMessage(PlayerList.outputFormat(sender, oConfigGroup, sender.tl("groupNumber", matchedList.size(), commandLabel, FormatUtil.stripFormat(configGroup))));
                     } else {
-                        sender.sendMessage(PlayerList.outputFormat(oConfigGroup, PlayerList.listUsers(ess, outputUserList, ", ")));
+                        sender.sendMessage(PlayerList.outputFormat(sender, oConfigGroup, PlayerList.listUsers(ess, sender, outputUserList, ", ")));
                     }
                     continue;
                 }
@@ -82,7 +80,7 @@ public class Commandlist extends EssentialsCommand {
                 continue;
             }
 
-            sender.sendMessage(PlayerList.outputFormat(oConfigGroup, PlayerList.listUsers(ess, outputUserList, ", ")));
+            sender.sendMessage(PlayerList.outputFormat(sender, oConfigGroup, PlayerList.listUsers(ess, sender, outputUserList, ", ")));
         }
 
         Set<String> var = playerList.keySet();
@@ -107,13 +105,13 @@ public class Commandlist extends EssentialsCommand {
             String groupName = asterisk.isEmpty() ? users.get(0).getGroup() : onlineGroup;
 
             if (ess.getPermissionsHandler().getName().equals("ConfigPermissions")) {
-                groupName = tl("connectedPlayers");
+                groupName = sender.tl("connectedPlayers");
             }
             if (users == null || users.isEmpty()) {
                 continue;
             }
 
-            sender.sendMessage(PlayerList.outputFormat(groupName, PlayerList.listUsers(ess, users, ", ")));
+            sender.sendMessage(PlayerList.outputFormat(sender, groupName, PlayerList.listUsers(ess, sender, users, ", ")));
         }
     }
 

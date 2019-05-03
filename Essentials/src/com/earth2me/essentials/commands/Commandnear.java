@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandnear extends EssentialsCommand {
     public Commandnear() {
@@ -52,14 +50,14 @@ public class Commandnear extends EssentialsCommand {
         radius = Math.abs(radius);
 
         if (radius > maxRadius && !user.isAuthorized("essentials.near.maxexempt")) {
-            user.sendMessage(tl("radiusTooBig", maxRadius));
+            user.sendTl("radiusTooBig", maxRadius);
             radius = maxRadius;
         }
 
         if (otherUser == null || !user.isAuthorized("essentials.near.others")) {
             otherUser = user;
         }
-        user.sendMessage(tl("nearbyPlayers", getLocal(server, otherUser, radius)));
+        user.sendTl("nearbyPlayers", getLocal(server, otherUser, radius));
     }
 
     @Override
@@ -75,7 +73,7 @@ public class Commandnear extends EssentialsCommand {
             } catch (NumberFormatException e) {
             }
         }
-        sender.sendMessage(tl("nearbyPlayers", getLocal(server, otherUser, radius)));
+        sender.sendTl("nearbyPlayers", getLocal(server, otherUser, radius));
     }
 
     private String getLocal(final Server server, final User user, final long radius) {
@@ -108,8 +106,7 @@ public class Commandnear extends EssentialsCommand {
             User nearbyPlayer = nearbyPlayers.poll();
             output.append(nearbyPlayer.getDisplayName()).append("§f(§4").append((long) nearbyPlayer.getLocation().distance(loc)).append("m§f)");
         }
-
-        return output.length() > 1 ? output.toString() : tl("none");
+        return output.length() > 1 ? output.toString() : user.tl("none");
     }
 
     @Override

@@ -9,8 +9,6 @@ import org.bukkit.Server;
 
 import java.util.List;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandspawnmob extends EssentialsCommand {
     public Commandspawnmob() {
@@ -21,7 +19,7 @@ public class Commandspawnmob extends EssentialsCommand {
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 1) {
             final String mobList = SpawnMob.mobList(user);
-            throw new NotEnoughArgumentsException(tl("mobsAvailable", mobList));
+            throw new NotEnoughArgumentsException(user.tl("mobsAvailable", mobList));
         }
 
         List<String> mobParts = SpawnMob.mobParts(args[0]);
@@ -33,7 +31,7 @@ public class Commandspawnmob extends EssentialsCommand {
         }
 
         if (mobParts.size() > 1 && !user.isAuthorized("essentials.spawnmob.stack")) {
-            throw new Exception(tl("cannotStackMob"));
+            throw new Exception(user.tl("cannotStackMob"));
         }
 
         if (args.length >= 3) {
@@ -49,7 +47,7 @@ public class Commandspawnmob extends EssentialsCommand {
     public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 3) {
             final String mobList = StringUtil.joinList(Mob.getMobList());
-            throw new NotEnoughArgumentsException(tl("mobsAvailable", mobList));
+            throw new NotEnoughArgumentsException(sender.tl("mobsAvailable", mobList));
         }
 
         List<String> mobParts = SpawnMob.mobParts(args[0]);

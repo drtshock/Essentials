@@ -52,6 +52,7 @@
         <module>nms/LegacyProvider</module>
         <module>nms/ReflectionProvider</module>
         <module>nms/FlattenedProvider</module>
+        <module>nms/LocaleApiProvider</module>
     </modules>
 
     <dependencies>

@@ -48,21 +48,20 @@ public class Commandbanip extends EssentialsCommand {
         if (args.length > 1) {
             banReason = FormatUtil.replaceFormat(getFinalArg(args, 1).replace("\\n", "\n").replace("|", "\n"));
         } else {
-            banReason = tl("defaultBanReason");
+            banReason = sender.tl("defaultBanReason");
         }
-
-        String banDisplay = tl("banFormat", banReason, senderName);
 
         ess.getServer().getBanList(BanList.Type.IP).addBan(ipAddress, banReason, null, senderName);
         server.getLogger().log(Level.INFO, tl("playerBanIpAddress", senderName, ipAddress, banReason));
 
         for (Player player : ess.getServer().getOnlinePlayers()) {
             if (player.getAddress().getAddress().getHostAddress().equalsIgnoreCase(ipAddress)) {
-                player.kickPlayer(banDisplay);
+                final User buser = ess.getUser(player);
+                player.kickPlayer(buser.tl("banFormat", banReason, senderName));
             }
         }
 
-        ess.broadcastMessage("essentials.banip.notify", tl("playerBanIpAddress", senderName, ipAddress, banReason));
+        ess.broadcastTl("essentials.banip.notify", "playerBanIpAddress", senderName, ipAddress, banReason);
     }
 
     @Override

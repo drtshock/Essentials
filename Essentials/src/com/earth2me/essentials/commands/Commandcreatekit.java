@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.earth2me.essentials.I18n.tl;
-
 public class Commandcreatekit extends EssentialsCommand {
 
     private static final String PASTE_URL = "https://hastebin.com/";
@@ -70,7 +68,7 @@ public class Commandcreatekit extends EssentialsCommand {
         // Some users might want to directly write to config knowing the consequences. *shrug*
         if (!ess.getSettings().isPastebinCreateKit()) {
             ess.getKits().addKit(kitname, list, delay);
-            user.sendMessage(tl("createdKit", kitname, list.size(), delay));
+            user.sendTl("createdKit", kitname, list.size(), delay);
         } else {
             ConfigurationSection config = new MemoryConfiguration();
             config.set("kits." + kitname + ".delay", delay);
@@ -99,7 +97,7 @@ public class Commandcreatekit extends EssentialsCommand {
                     }
                     // Error
                     if (connection.getResponseCode() >= 400) {
-                        sender.sendMessage(tl("createKitFailed", kitName));
+                        sender.sendTl("createKitFailed", kitName);
                         String message = CharStreams.toString(new InputStreamReader(connection.getErrorStream(), Charsets.UTF_8));
                         ess.getLogger().severe("Error creating kit: " + message);
                         return;
@@ -110,19 +108,19 @@ public class Commandcreatekit extends EssentialsCommand {
                     String pasteUrl = PASTE_URL + object.get("key").getAsString();
                     connection.disconnect();
 
-                    String separator = tl("createKitSeparator");
+                    String separator = sender.tl("createKitSeparator");
                     String delayFormat = "0";
                     if (delay > 0) {
-                        delayFormat = DateUtil.formatDateDiff(System.currentTimeMillis() + (delay * 1000));
+                        delayFormat = DateUtil.formatDateDiff(sender, System.currentTimeMillis() + (delay * 1000));
                     }
                     sender.sendMessage(separator);
-                    sender.sendMessage(tl("createKitSuccess", kitName, delayFormat, pasteUrl));
+                    sender.sendTl("createKitSuccess", kitName, delayFormat, pasteUrl);
                     sender.sendMessage(separator);
                     if (ess.getSettings().isDebug()) {
                         ess.getLogger().info(sender.getSender().getName() + " created a kit: " + pasteUrl);
                     }
                 } catch (Exception e) {
-                    sender.sendMessage(tl("createKitFailed", kitName));
+                    sender.sendTl("createKitFailed", kitName);
                     e.printStackTrace();
                 }
             }

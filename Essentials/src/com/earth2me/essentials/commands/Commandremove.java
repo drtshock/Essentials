@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 // This could be rewritten in a simpler form if we made a mapping of all Entity names to their types (which would also provide possible mod support)
 
 public class Commandremove extends EssentialsCommand {
@@ -61,7 +59,7 @@ public class Commandremove extends EssentialsCommand {
         List<String> customTypes = new ArrayList<>();
 
         if (world == null) {
-            throw new Exception(tl("invalidWorld"));
+            throw new Exception(sender.tl("invalidWorld"));
         }
 
         if (args[0].contentEquals("*") || args[0].contentEquals("all")) {
@@ -110,7 +108,7 @@ public class Commandremove extends EssentialsCommand {
         }
 
         if (warnUser) {
-            sender.sendMessage(tl("invalidMob"));
+            sender.sendTl("invalidMob");
         }
 
         for (Chunk chunk : world.getLoadedChunks()) {
@@ -242,7 +240,7 @@ public class Commandremove extends EssentialsCommand {
                 }
             }
         }
-        sender.sendMessage(tl("removed", removed));
+        sender.sendTl("removed", removed);
     }
 
     @Override

@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.earth2me.essentials.I18n.tl;
-
 
 public class Commandworth extends EssentialsCommand {
     public Commandworth() {
@@ -51,9 +49,9 @@ public class Commandworth extends EssentialsCommand {
         }
         if (count > 1) {
             if (args.length > 0 && args[0].equalsIgnoreCase("blocks")) {
-                user.sendMessage(tl("totalSellableBlocks", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendTl("totalSellableBlocks", type, NumberUtil.displayCurrency(totalWorth, ess));
             } else {
-                user.sendMessage(tl("totalSellableAll", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendTl("totalSellableAll", type, NumberUtil.displayCurrency(totalWorth, ess));
             }
         }
     }
@@ -87,7 +85,7 @@ public class Commandworth extends EssentialsCommand {
         BigDecimal worth = ess.getWorth().getPrice(ess, is);
 
         if (worth == null) {
-            throw new Exception(tl("itemCannotBeSold"));
+            throw new Exception(sender.tl("itemCannotBeSold"));
         }
 
         if (amount < 0) {
@@ -96,7 +94,7 @@ public class Commandworth extends EssentialsCommand {
 
         BigDecimal result = worth.multiply(BigDecimal.valueOf(amount));
 
-        sender.sendMessage(is.getDurability() != 0 ? tl("worthMeta", is.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", ""), is.getDurability(), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)) : tl("worth", is.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", ""), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)));
+        sender.sendMessage(is.getDurability() != 0 ? sender.tl("worthMeta", is.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", ""), is.getDurability(), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)) : sender.tl("worth", is.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", ""), NumberUtil.displayCurrency(result, ess), amount, NumberUtil.displayCurrency(worth, ess)));
 
         return result;
     }
