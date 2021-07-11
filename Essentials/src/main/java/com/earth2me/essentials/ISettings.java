@@ -43,8 +43,13 @@ public interface ISettings extends IConf {
 
     char getChatQuestion();
 
+    @Deprecated
+    Map<String, BigDecimal> getCommandCosts();
+
+    @Deprecated
     BigDecimal getCommandCost(IEssentialsCommand cmd);
 
+    @Deprecated
     BigDecimal getCommandCost(String label);
 
     String getCurrencySymbol();
@@ -309,16 +314,23 @@ public interface ISettings extends IConf {
 
     boolean isTeleportToCenterLocation();
 
+    @Deprecated
     boolean isCommandCooldownsEnabled();
 
     boolean isWorldChangeFlyResetEnabled();
 
     boolean isWorldChangeSpeedResetEnabled();
 
+    @Deprecated
+    CommentedConfigurationNode getCommandCooldowns();
+
+    @Deprecated
     long getCommandCooldownMs(String label);
 
+    @Deprecated
     Entry<Pattern, Long> getCommandCooldownEntry(String label);
 
+    @Deprecated
     boolean isCommandCooldownPersistent(String label);
 
     boolean isNpcsInBalanceRanking();

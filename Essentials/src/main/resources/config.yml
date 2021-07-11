@@ -637,23 +637,7 @@ send-fly-enable-on-join: true
 # Give someone permission to teleport to a world with essentials.time.world.<worldname>.
 world-time-permissions: false
 
-# Specify cooldown for both Essentials commands and external commands as well.
-# All commands do not start with a Forward Slash (/). Instead of /msg, write msg
-#
-# Wildcards are supported. E.g.
-# - '*i*': 50
-# adds a 50 second cooldown to all commands that include the letter i
-#
-# EssentialsX supports regex by starting the command with a caret ^
-# For example, to target commands starting with ban and not banip the following would be used:
-#  '^ban([^ip])( .*)?': 60 # 60 seconds /ban cooldown.
-# Note: If you have a command that starts with ^, then you can escape it using backslash (\). e.g. \^command: 123
-command-cooldowns:
-#  feed: 100 # 100 second cooldown on /feed command
-#  '*': 5 # 5 Second cooldown on all commands
-
-# Whether command cooldowns should be persistent past server shutdowns
-command-cooldown-persistence: true
+# command-cooldowns are now in command-filters.yml
 
 # Whether NPC balances should be listed in balance ranking features such as /balancetop.
 # NPC balances can include features like factions from FactionsUUID plugin.
@@ -776,13 +760,7 @@ confirm-home-overwrite: false
 # Defines the balance with which new players begin. Defaults to 0.
 starting-balance: 0
 
-# Defines the cost to use the given commands PER USE.
-# Some commands like /repair have sub-costs, check the wiki for more information.
-command-costs:
-  # /example costs $1000 PER USE
-  #example: 1000
-  # /kit tools costs $1500 PER USE
-  #kit-tools: 1500
+# command-costs are now in command-filters.yml
 
 # Set this to a currency symbol you want to use.
 # Remember, if you want to use special characters in this document, 

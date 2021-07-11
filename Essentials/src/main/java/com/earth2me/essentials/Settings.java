@@ -354,6 +354,11 @@ public class Settings implements net.ess3.api.ISettings {
         return getCommandCost(cmd.getName());
     }
 
+    @Override
+    public Map<String, BigDecimal> getCommandCosts() {
+        return commandCosts;
+    }
+
     private Map<String, BigDecimal> _getCommandCosts() {
         final Map<String, CommentedConfigurationNode> section = ConfigurateUtil.getMap(config.getSection("command-costs"));
         if (!section.isEmpty()) {
@@ -1516,6 +1521,11 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("teleport-to-center", true);
     }
 
+    @Override
+    public CommentedConfigurationNode getCommandCooldowns() {
+        return config.getSection("command-cooldowns");
+    }
+
     private Map<Pattern, Long> _getCommandCooldowns() {
         final CommentedConfigurationNode section = config.getSection("command-cooldowns");
         if (section == null) {
@@ -1600,7 +1610,6 @@ public class Settings implements net.ess3.api.ISettings {
 
     @Override
     public boolean isCommandCooldownPersistent(final String label) {
-        // TODO: enable per command cooldown specification for persistence.
         return config.getBoolean("command-cooldown-persistence", true);
     }
 

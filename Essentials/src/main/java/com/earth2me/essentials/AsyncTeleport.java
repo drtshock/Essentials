@@ -266,12 +266,16 @@ public class AsyncTeleport implements IAsyncTeleport {
         delay = event.getDelay();
 
         Trade cashCharge = chargeFor;
+        String cooldownCommand = null;
 
         if (chargeFor != null) {
             chargeFor.isAffordableFor(teleportOwner, future);
             if (future.isCompletedExceptionally()) {
                 return;
             }
+
+            // When cashCharge is being reassigned below, ensure the charge knows the command we should apply cooldown on
+            cooldownCommand = chargeFor.getCommand();
 
             //This code is to make sure that commandcosts are checked in the initial world, and not in the resulting world.
             if (!chargeFor.getCommandCost(teleportOwner).equals(BigDecimal.ZERO)) {
@@ -291,7 +295,7 @@ public class AsyncTeleport implements IAsyncTeleport {
             }
             nowAsync(teleportee, target, cause, future);
             if (cashCharge != null) {
-                cashCharge.charge(teleportOwner, future);
+                cashCharge.charge(teleportOwner, cooldownCommand, future);
                 if (future.isCompletedExceptionally()) {
                     return;
                 }
@@ -316,12 +320,16 @@ public class AsyncTeleport implements IAsyncTeleport {
         delay = event.getDelay();
 
         Trade cashCharge = chargeFor;
+        String cooldownCommand = null;
 
         if (teleporter != null && chargeFor != null) {
             chargeFor.isAffordableFor(teleporter, future);
             if (future.isCompletedExceptionally()) {
                 return;
             }
+
+            // When cashCharge is being reassigned below, ensure the charge knows the command we should apply cooldown on
+            cooldownCommand = chargeFor.getCommand();
 
             //This code is to make sure that commandcosts are checked in the initial world, and not in the resulting world.
             if (!chargeFor.getCommandCost(teleporter).equals(BigDecimal.ZERO)) {
@@ -343,7 +351,7 @@ public class AsyncTeleport implements IAsyncTeleport {
 
             nowAsync(teleportee, target, cause, future);
             if (teleporter != null && cashCharge != null) {
-                cashCharge.charge(teleporter, future);
+                cashCharge.charge(teleporter, cooldownCommand, future);
                 if (future.isCompletedExceptionally()) {
                     return;
                 }

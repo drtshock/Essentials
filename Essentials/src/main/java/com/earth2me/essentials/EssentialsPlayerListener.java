@@ -9,6 +9,7 @@ import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
+import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.VersionUtil;
 import io.papermc.lib.PaperLib;
 import net.ess3.api.IEssentials;
@@ -56,6 +57,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -624,8 +626,7 @@ public class EssentialsPlayerListener implements Listener {
             user.updateActivityOnInteract(broadcast);
         }
 
-        if (ess.getSettings().isCommandCooldownsEnabled()
-            && !user.isAuthorized("essentials.commandcooldowns.bypass")) {
+        if (pluginCommand != null) {
             final int argStartIndex = effectiveCommand.indexOf(" ");
             final String args = argStartIndex == -1 ? "" // No arguments present
                 : " " + effectiveCommand.substring(argStartIndex); // arguments start at argStartIndex; substring from there.
@@ -654,14 +655,27 @@ public class EssentialsPlayerListener implements Listener {
             }
 
             if (!cooldownFound) {
-                final Entry<Pattern, Long> cooldownEntry = ess.getSettings().getCommandCooldownEntry(fullCommand);
-
-                if (cooldownEntry != null) {
+                final CommandFilter cooldownFilter = ess.getCommandFilters().getCommandCooldown(user, fullCommand, CommandFilter.Type.REGEX);
+                if (cooldownFilter != null) {
                     if (ess.getSettings().isDebug()) {
-                        ess.getLogger().info("Applying " + cooldownEntry.getValue() + "ms cooldown on /" + fullCommand + " for" + user.getName() + ".");
+                        ess.getLogger().info("Applying " + cooldownFilter.getCooldown() + "ms cooldown on /" + fullCommand + " for " + user.getName() + ".");
                     }
-                    final Date expiry = new Date(System.currentTimeMillis() + cooldownEntry.getValue());
-                    user.addCommandCooldown(cooldownEntry.getKey(), expiry, ess.getSettings().isCommandCooldownPersistent(fullCommand));
+                    cooldownFilter.applyCooldownTo(user);
+                }
+
+                final CommandFilter costFilter = ess.getCommandFilters().getCommandCost(user, fullCommand, CommandFilter.Type.REGEX);
+                if (costFilter != null) {
+                    if (ess.getSettings().isDebug()) {
+                        ess.getLogger().info("Applying a cost of " + costFilter.getCost() + " on /" + fullCommand + " for " + user.getName() + ".");
+                    }
+
+                    final BigDecimal cost = costFilter.getCost();
+                    if (!user.canAfford(cost) && cost.signum() > 0) {
+                        player.sendMessage(tl("notEnoughMoney", NumberUtil.displayCurrency(cost, ess)));
+                        event.setCancelled(true);
+                        return;
+                    }
+                    user.takeMoney(cost);
                 }
             }
         }

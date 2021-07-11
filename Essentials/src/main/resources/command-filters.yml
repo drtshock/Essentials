@@ -1,0 +1,49 @@
+# This file stores cooldowns and costs for commands.
+
+# Each filter must follow the following template keys:
+
+# [command] - the name of an EssentialsX command; these filters will ensure that the command succeeds before charging the player or starting the cooldown
+# All commands do not start with a Forward Slash (/). Instead of /msg, write msg
+# Sub-commands are supported: for example, "kit tools" would be look like this:
+
+# example:
+#   command: "kit-tools"
+#   cost: 1000
+# which would result in a 1000 cost for "/kit tools".
+
+# [pattern] - a regex to match any plugin's command against; these filters will not check whether the command succeeds
+# Wildcards are also supported. E.g.
+# - '*i*': 50
+# adds a 50 second cooldown to all commands that include the letter i
+
+# EssentialsX supports regex by starting the command with a caret ^
+# For example, to target commands starting with ban and not banip the following would be used:
+
+# example:
+#   pattern: "^ban([^ip])( .*)?"
+#   cooldown: 60
+# which would result in a 60 seconds /ban cooldown.
+# Note: If you have a command that starts with ^, then you can escape it using backslash (\). e.g. \^command: 123
+
+# [cooldown] - the length of time that the player will have to wait until they can use a command matching this filter again, in seconds
+
+# [cost] - the amount that will be deducted from the player's economy balance when they use the command
+
+# You need to set at least the pattern or command.
+
+# The "warp" example will charge 100 bucks for "/warp examplewarp", and have a cooldown of 10 seconds.
+# The cooldown can be bypassed with "essentials.commandcooldowns.bypass.warp", or if you want to bypass all cooldowns: "essentials.commandcooldowns.bypass".
+# The cost can be bypassed with "essentials.nocommandcost.warp", or if you want to bypass all costs: "essentials.nocommandcost.all".
+
+# The "commands" example will charge 10000 for "/example" and "/othercommand".
+# Bypass permissions are the same as above, but now with "commands" instead of "warp".
+
+filters:
+  warp:
+    command: "warp-examplewarp"
+    cost: 100
+    cooldown: 10
+
+  commands:
+    pattern: "(example|othercommand)"
+    cost: 10000
