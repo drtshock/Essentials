@@ -9,6 +9,7 @@ import com.earth2me.essentials.utils.NumberUtil;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +36,7 @@ public class Commandwhois extends EssentialsCommand {
         sender.sendMessage(tl("whoisTop", user.getName()));
         user.setDisplayNick();
         sender.sendMessage(tl("whoisNick", user.getDisplayName()));
+        sender.sendMessage(tl("whoisJoined", DateUtil.formatDateDiff(user.getBase().getFirstPlayed()), new SimpleDateFormat("yyyy/MM/dd HH:mm").format(user.getBase().getFirstPlayed())));
         sender.sendMessage(tl("whoisUuid", user.getBase().getUniqueId().toString()));
         sender.sendMessage(tl("whoisHealth", user.getBase().getHealth()));
         sender.sendMessage(tl("whoisHunger", user.getBase().getFoodLevel(), user.getBase().getSaturation()));
