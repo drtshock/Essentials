@@ -2,6 +2,7 @@ package com.earth2me.essentials.spawn;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.OfflinePlayer;
+import com.earth2me.essentials.RandomTeleport;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.util.List;
@@ -64,6 +66,13 @@ class EssentialsSpawnPlayerListener implements Listener {
                 event.setRespawnLocation(home);
                 return;
             }
+        } else if (ess.getSettings().isRandomRespawn()) {
+            final String name = ess.getSettings().getRandomRespawnLocation();
+            final RandomTeleport randomTeleport = ess.getRandomTeleport();
+            randomTeleport.getRandomLocation(name).thenAccept(location -> {
+                final CompletableFuture<Boolean> future = new CompletableFuture<>();
+                user.getAsyncTeleport().now(location, false, PlayerTeleportEvent.TeleportCause.COMMAND, future);
+            });
         }
         final Location spawn = spawns.getSpawn(user.getGroup());
         if (spawn != null) {

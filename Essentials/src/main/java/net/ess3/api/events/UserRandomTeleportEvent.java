@@ -14,11 +14,19 @@ public class UserRandomTeleportEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final IUser user;
+    private String name;
     private Location center;
     private double minRange;
     private double maxRange;
     private boolean cancelled = false;
+    private boolean modified = false;
 
+    public UserRandomTeleportEvent(final IUser user, final String name, final Location center, final double minRange, final double maxRange) {
+        this(user, center, minRange, maxRange);
+        this.name = name;
+    }
+
+    @Deprecated
     public UserRandomTeleportEvent(final IUser user, final Location center, final double minRange, final double maxRange) {
         super(!Bukkit.isPrimaryThread());
         this.user = user;
@@ -35,11 +43,23 @@ public class UserRandomTeleportEvent extends Event implements Cancellable {
         return user;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Location getCenter() {
         return center;
     }
 
+    /**
+     * Sets the center location to teleport from.
+     *
+     * @param center Center location.
+     */
     public void setCenter(final Location center) {
+        if (!this.center.equals(center)) {
+            modified = true;
+        }
         this.center = center;
     }
 
@@ -47,7 +67,15 @@ public class UserRandomTeleportEvent extends Event implements Cancellable {
         return minRange;
     }
 
+    /**
+     * Sets the minimum range for the teleport.
+     *
+     * @param minRange Minimum range.
+     */
     public void setMinRange(final double minRange) {
+        if (this.minRange != minRange) {
+            modified = true;
+        }
         this.minRange = minRange;
     }
 
@@ -55,7 +83,15 @@ public class UserRandomTeleportEvent extends Event implements Cancellable {
         return maxRange;
     }
 
+    /**
+     * Sets the maximum range for the teleport.
+     *
+     * @param maxRange Maximum range.
+     */
     public void setMaxRange(final double maxRange) {
+        if (this.maxRange != maxRange) {
+            modified = true;
+        }
         this.maxRange = maxRange;
     }
 
@@ -67,6 +103,10 @@ public class UserRandomTeleportEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(final boolean b) {
         cancelled = b;
+    }
+
+    public boolean isModified() {
+        return modified;
     }
 
     @Override

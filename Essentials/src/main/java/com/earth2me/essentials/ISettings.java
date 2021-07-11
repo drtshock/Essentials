@@ -92,6 +92,10 @@ public interface ISettings extends IConf {
 
     boolean getRespawnAtHome();
 
+    boolean isRandomRespawn();
+
+    String getRandomRespawnLocation();
+
     boolean isRespawnAtAnchor();
 
     Set getMultipleHomes();

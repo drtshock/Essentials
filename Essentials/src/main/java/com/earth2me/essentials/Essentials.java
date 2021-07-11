@@ -295,6 +295,10 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             upgrade.convertKits();
             execTimer.mark("Kits");
 
+            randomTeleport = new RandomTeleport(this);
+            confList.add(randomTeleport);
+            execTimer.mark("Init(RandomTeleport)");
+
             upgrade.afterSettings();
             execTimer.mark("Upgrade2");
 
@@ -309,13 +313,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             itemDb = getItemDbFromConfig();
             confList.add(itemDb);
             execTimer.mark("Init(ItemDB)");
-
-            randomTeleport = new RandomTeleport(this);
-            if (randomTeleport.getPreCache()) {
-                randomTeleport.cacheRandomLocations(randomTeleport.getCenter(), randomTeleport.getMinRange(), randomTeleport.getMaxRange());
-            }
-            confList.add(randomTeleport);
-            execTimer.mark("Init(RandomTeleport)");
 
             customItemResolver = new CustomItemResolver(this);
             try {
