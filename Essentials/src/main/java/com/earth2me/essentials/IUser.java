@@ -12,13 +12,16 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -61,8 +64,11 @@ public interface IUser {
     /**
      * Returns whether this user has an outstanding teleport request to deal with.
      *
+     * @deprecated The teleport request system has been moved into a multi-user teleport request queue.
+     * @see IUser#hasPendingTpaRequests(boolean, boolean)
      * @return whether there is a teleport request
      */
+    @Deprecated
     boolean hasOutstandingTeleportRequest();
 
     /**
@@ -98,6 +104,11 @@ public interface IUser {
 
     boolean canBuild();
 
+    /**
+     * @deprecated The teleport request system has been moved into a multi-user teleport request queue.
+     * @see IUser#getNextTpaRequest(boolean, boolean, boolean)
+     */
+    @Deprecated
     long getTeleportRequestTime();
 
     void enableInvulnerabilityAfterTeleport();
@@ -205,6 +216,8 @@ public interface IUser {
 
     String getName();
 
+    UUID getUUID();
+
     String getDisplayName();
 
     String getFormattedNickname();
@@ -238,4 +251,74 @@ public interface IUser {
     void setToggleShout(boolean toggleShout);
 
     boolean isToggleShout();
+
+    /**
+     * Gets information about the most-recently-made, non-expired TPA request in the tpa queue of this {@link IUser}.
+     * <p>
+     * The TPA Queue is Last-In-First-Out queue which stores all the active pending teleport
+     * requests of this {@link IUser}. Timeout calculations are also done during the
+     * iteration process of this method, ensuring that teleport requests made past the timeout
+     * period are removed from queue and therefore not returned here. The maximum size of this
+     * queue is determined by {@link ISettings#getTpaMaxRequests()}.
+     *
+     * @param inform             true if the underlying {@link IUser} should be informed if a request expires during iteration.
+     * @param performExpirations true if this method should not spend time validating time for all items in the queue and just return the first item in the queue.
+     * @param excludeHere        true if /tphere requests should be ignored in fetching the next tpa request.
+     * @return A {@link TpaRequest} corresponding to the next available request or null if no valid request is present.
+     */
+    @Nullable TpaRequest getNextTpaRequest(boolean inform, boolean performExpirations, boolean excludeHere);
+
+    /**
+     * Whether or not this {@link IUser} has any valid TPA requests in queue.
+     *
+     * @param inform      true if the user should be informed if a request expires during iteration.
+     * @param excludeHere true if /tpahere requests should be ignored in checking if a tpa request is available.
+     * @return true if the user has an available pending request in queue.
+     */
+    boolean hasPendingTpaRequests(boolean inform, boolean excludeHere);
+
+    class TpaRequest {
+        private final String name;
+        private final UUID requesterUuid;
+        private boolean here;
+        private Location location;
+        private long time;
+
+        public TpaRequest(String name, UUID requesterUuid) {
+            this.name = name;
+            this.requesterUuid = requesterUuid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public UUID getRequesterUuid() {
+            return requesterUuid;
+        }
+
+        public boolean isHere() {
+            return here;
+        }
+
+        public void setHere(boolean here) {
+            this.here = here;
+        }
+
+        public Location getLocation() {
+            return location;
+        }
+
+        public void setLocation(Location location) {
+            this.location = location;
+        }
+
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+    }
 }

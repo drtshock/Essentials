@@ -1248,6 +1248,11 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getLong("tpa-accept-cancellation", 120);
     }
 
+    @Override
+    public int getTpaMaxRequests() {
+        return config.getInt("tpa-max-requests", 5);
+    }
+
     private long _getTeleportInvulnerability() {
         return config.getLong("teleport-invulnerability", 0) * 1000;
     }

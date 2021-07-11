@@ -37,11 +37,12 @@ public class Commandtpa extends EssentialsCommand {
         if (user.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + player.getWorld().getName())) {
             throw new Exception(tl("noPerm", "essentials.worlds." + player.getWorld().getName()));
         }
+
         // Don't let sender request teleport twice to the same player.
-        if (user.getConfigUUID().equals(player.getTeleportRequest()) && player.hasOutstandingTeleportRequest() // Check timeout
-            && !player.isTpRequestHere()) { // Make sure the last teleport request was actually tpa and not tpahere
+        if (player.hasOutstandingTpaRequest(user.getName(), false)) {
             throw new Exception(tl("requestSentAlready", player.getDisplayName()));
         }
+
         if (player.isAutoTeleportEnabled() && !player.isIgnoredPlayer(user)) {
             final Trade charge = new Trade(this.getName(), ess);
             final AsyncTeleport teleport = user.getAsyncTeleport();
@@ -71,6 +72,7 @@ public class Commandtpa extends EssentialsCommand {
                 player.sendMessage(tl("teleportRequestTimeoutInfo", ess.getSettings().getTpaAcceptCancellation()));
             }
         }
+
         user.sendMessage(tl("requestSent", player.getDisplayName()));
         if (user.isAuthorized("essentials.tpacancel")) {
             user.sendMessage(tl("typeTpacancel"));

@@ -19,17 +19,17 @@ public class Commandtpaall extends EssentialsCommand {
     public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 1) {
             if (sender.isPlayer()) {
-                teleportAAllPlayers(server, sender, ess.getUser(sender.getPlayer()));
+                teleportAAllPlayers(sender, ess.getUser(sender.getPlayer()));
                 return;
             }
             throw new NotEnoughArgumentsException();
         }
 
         final User target = getPlayer(server, sender, args, 0);
-        teleportAAllPlayers(server, sender, target);
+        teleportAAllPlayers(sender, target);
     }
 
-    private void teleportAAllPlayers(final Server server, final CommandSource sender, final User target) {
+    private void teleportAAllPlayers(final CommandSource sender, final User target) {
         sender.sendMessage(tl("teleportAAll"));
         for (final User player : ess.getOnlineUsers()) {
             if (target == player) {
@@ -41,6 +41,7 @@ public class Commandtpaall extends EssentialsCommand {
             if (sender.getSender().equals(target.getBase()) && target.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !target.isAuthorized("essentials.worlds." + target.getWorld().getName())) {
                 continue;
             }
+
             try {
                 final TPARequestEvent tpaEvent = new TPARequestEvent(sender, player, true);
                 ess.getServer().getPluginManager().callEvent(tpaEvent);

@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.User;
-import net.ess3.api.IEssentials;
 import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
@@ -15,20 +14,12 @@ public class Commandtpacancel extends EssentialsCommand {
     /**
      * Cancel {@link User}'s tp request if its {@code requester} is equal to the given {@code requester}.
      *
-     * @param ess       ess instance
      * @param user      user holding tp request
      * @param requester tp requester
      * @return whether tp was cancelled
      */
-    public static boolean cancelTeleportRequest(final IEssentials ess, final User user, final User requester) throws Exception {
-        if (user.getTeleportRequest() != null) {
-            final User userRequester = ess.getUser(user.getTeleportRequest());
-            if (requester.equals(userRequester)) {
-                user.requestTeleport(null, false);
-                return true;
-            }
-        }
-        return false;
+    public static boolean cancelTeleportRequest(final User user, final User requester) {
+        return user.removeTpaRequest(requester.getName()) != null;
     }
 
     @Override
@@ -37,7 +28,7 @@ public class Commandtpacancel extends EssentialsCommand {
             int cancellations = 0;
             for (final User onlineUser : ess.getOnlineUsers()) {
                 if (onlineUser == user) continue;
-                if (cancelTeleportRequest(ess, onlineUser, user)) {
+                if (cancelTeleportRequest(onlineUser, user)) {
                     cancellations++;
                 }
             }
@@ -48,7 +39,7 @@ public class Commandtpacancel extends EssentialsCommand {
             }
         } else {
             final User targetPlayer = getPlayer(server, user, args, 0);
-            if (cancelTeleportRequest(ess, targetPlayer, user)) {
+            if (cancelTeleportRequest(targetPlayer, user)) {
                 user.sendMessage(tl("teleportRequestSpecificCancelled", targetPlayer.getName()));
             }
         }

@@ -33,11 +33,12 @@ public class Commandtpahere extends EssentialsCommand {
         if (user.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + user.getWorld().getName())) {
             throw new Exception(tl("noPerm", "essentials.worlds." + user.getWorld().getName()));
         }
+
         // Don't let sender request teleport twice to the same player.
-        if (user.getConfigUUID().equals(player.getTeleportRequest()) && player.hasOutstandingTeleportRequest() // Check timeout
-            && player.isTpRequestHere()) { // Make sure the last teleport request was actually tpahere and not tpa
+        if (player.hasOutstandingTpaRequest(user.getName(), true)) {
             throw new Exception(tl("requestSentAlready", player.getDisplayName()));
         }
+
         if (!player.isIgnoredPlayer(user)) {
             final TPARequestEvent tpaEvent = new TPARequestEvent(user.getSource(), player, true);
             ess.getServer().getPluginManager().callEvent(tpaEvent);

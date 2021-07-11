@@ -231,6 +231,8 @@ public interface ISettings extends IConf {
 
     long getTpaAcceptCancellation();
 
+    int getTpaMaxRequests();
+
     long getTeleportInvulnerability();
 
     boolean isTeleportInvulnerability();

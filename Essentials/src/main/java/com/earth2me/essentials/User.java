@@ -30,16 +30,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,28 +53,37 @@ import static com.earth2me.essentials.I18n.tl;
 public class User extends UserData implements Comparable<User>, IMessageRecipient, net.ess3.api.IUser {
     private static final Statistic PLAY_ONE_TICK = EnumUtil.getStatistic("PLAY_ONE_MINUTE", "PLAY_ONE_TICK");
     private static final Logger logger = Logger.getLogger("Essentials");
+
+    // User modules
     private final IMessageRecipient messageRecipient;
     private transient final AsyncTeleport teleport;
     private transient final Teleport legacyTeleport;
+
+    // User command confirmation strings
     private final Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
-    private transient UUID teleportRequester;
-    private transient boolean teleportRequestHere;
-    private transient Location teleportLocation;
+
+    // User teleport variables
+    private final transient LinkedHashMap<String, TpaRequest> teleportRequestQueue = new LinkedHashMap<>();
+
+    // User properties
     private transient boolean vanished;
-    private transient long teleportRequestTime;
-    private transient long lastOnlineActivity;
-    private transient long lastThrottledAction;
-    private transient long lastActivity = System.currentTimeMillis();
     private boolean hidden = false;
     private boolean rightClickJump = false;
-    private transient Location afkPosition = null;
     private boolean invSee = false;
     private boolean recipeSee = false;
     private boolean enderSee = false;
-    private transient long teleportInvulnerabilityTimestamp = 0;
     private boolean ignoreMsg = false;
+
+    // User afk variables
     private String afkMessage;
     private long afkSince;
+    private transient Location afkPosition = null;
+
+    // Misc
+    private transient long lastOnlineActivity;
+    private transient long lastThrottledAction;
+    private transient long lastActivity = System.currentTimeMillis();
+    private transient long teleportInvulnerabilityTimestamp = 0;
     private String confirmingClearCommand;
     private long lastNotifiedAboutMailsMs;
     private String lastHomeConfirmation;
@@ -90,9 +104,8 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         this.messageRecipient = new SimpleMessageRecipient(ess, this);
     }
 
-    User update(final Player base) {
+    void update(final Player base) {
         setBase(base);
-        return this;
     }
 
     @Override
@@ -327,44 +340,95 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public void requestTeleport(final User player, final boolean here) {
-        teleportRequestTime = System.currentTimeMillis();
-        teleportRequester = player == null ? null : player.getBase().getUniqueId();
-        teleportRequestHere = here;
-        if (player == null) {
-            teleportLocation = null;
-        } else {
-            teleportLocation = here ? player.getLocation() : this.getLocation();
+        final TpaRequest request = teleportRequestQueue.getOrDefault(player.getName(), new TpaRequest(player.getName(), player.getUUID()));
+        request.setTime(System.currentTimeMillis());
+        request.setHere(here);
+        request.setLocation(here ? player.getLocation() : this.getLocation());
+
+        // Handle max queue size
+        teleportRequestQueue.remove(request.getName());
+        if (teleportRequestQueue.size() >= ess.getSettings().getTpaMaxRequests()) {
+            String lastKey = null;
+            for (Map.Entry<String, TpaRequest> entry : teleportRequestQueue.entrySet()) {
+                lastKey = entry.getKey();
+            }
+            teleportRequestQueue.remove(lastKey);
         }
+
+        // Add request to queue
+        teleportRequestQueue.put(request.getName(), request);
     }
 
     @Override
+    @Deprecated
     public boolean hasOutstandingTeleportRequest() {
-        if (getTeleportRequest() != null) { // Player has outstanding teleport request.
-            final long timeout = ess.getSettings().getTpaAcceptCancellation();
-            if (timeout != 0) {
-                if ((System.currentTimeMillis() - getTeleportRequestTime()) / 1000 <= timeout) { // Player has outstanding request
-                    return true;
-                } else { // outstanding request expired.
-                    requestTeleport(null, false);
-                    return false;
+        return getNextTpaRequest(false, false, false) != null;
+    }
+
+    public Collection<String> getPendingTpaKeys() {
+        return teleportRequestQueue.keySet();
+    }
+
+    @Override
+    public boolean hasPendingTpaRequests(boolean inform, boolean excludeHere) {
+        return getNextTpaRequest(inform, false, excludeHere) != null;
+    }
+
+    public boolean hasOutstandingTpaRequest(String playerUsername, boolean here) {
+        final TpaRequest request = getOutstandingTpaRequest(playerUsername, false);
+        return request != null && request.isHere() == here;
+    }
+
+    public @Nullable TpaRequest getOutstandingTpaRequest(String playerUsername, boolean inform) {
+        if (!teleportRequestQueue.containsKey(playerUsername)) {
+            return null;
+        }
+
+        final long timeout = ess.getSettings().getTpaAcceptCancellation();
+        final TpaRequest request = teleportRequestQueue.get(playerUsername);
+        if (timeout < 1 || System.currentTimeMillis() - request.getTime() <= timeout * 1000) {
+            return request;
+        }
+        teleportRequestQueue.remove(playerUsername);
+        if (inform) {
+            sendMessage(tl("requestTimedOutFrom", ess.getUser(request.getRequesterUuid()).getDisplayName()));
+        }
+        return null;
+    }
+
+    public TpaRequest removeTpaRequest(String playerUsername) {
+        return teleportRequestQueue.remove(playerUsername);
+    }
+
+    @Override
+    public TpaRequest getNextTpaRequest(boolean inform, boolean performExpirations, boolean excludeHere) {
+        if (teleportRequestQueue.isEmpty()) {
+            return null;
+        }
+
+        final long timeout = ess.getSettings().getTpaAcceptCancellation();
+        final Iterator<Map.Entry<String, TpaRequest>> iterator = teleportRequestQueue.entrySet().iterator();
+        TpaRequest nextRequest = null;
+        while (iterator.hasNext()) {
+            final TpaRequest request = iterator.next().getValue();
+            if (timeout < 1 || (System.currentTimeMillis() - request.getTime()) <= TimeUnit.SECONDS.toMillis(timeout)) {
+                if (excludeHere && request.isHere()) {
+                    continue;
                 }
-            } else { // outstanding request does not expire
-                return true;
+
+                if (performExpirations) {
+                    return request;
+                } else if (nextRequest == null) {
+                    nextRequest = request;
+                }
+            } else {
+                if (inform) {
+                    sendMessage(tl("requestTimedOutFrom", ess.getUser(request.getRequesterUuid()).getDisplayName()));
+                }
+                iterator.remove();
             }
         }
-        return false;
-    }
-
-    public UUID getTeleportRequest() {
-        return teleportRequester;
-    }
-
-    public boolean isTpRequestHere() {
-        return teleportRequestHere;
-    }
-
-    public Location getTpRequestLocation() {
-        return teleportLocation;
+        return nextRequest;
     }
 
     public String getNick() {
@@ -823,8 +887,11 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         return ess.getPermissionsHandler().canBuild(base, getGroup());
     }
 
+    @Override
+    @Deprecated
     public long getTeleportRequestTime() {
-        return teleportRequestTime;
+        final TpaRequest request = getNextTpaRequest(false, false, false);
+        return request == null ? 0L : request.getTime();
     }
 
     public boolean isInvSee() {
@@ -990,7 +1057,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public UUID getUUID() {
-        return getBase().getUniqueId();
+        return this.getBase().getUniqueId();
     }
 
     @Override
