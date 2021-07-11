@@ -28,6 +28,12 @@ public interface InteractionMember {
     }
 
     /**
+     * Gets the discord mention of this member.
+     * @return this member's mention.
+     */
+    String getAsMention();
+
+    /**
      * Gets the nickname of this member or their username if they don't have one.
      * @return this member's nickname or username if none is present.
      */

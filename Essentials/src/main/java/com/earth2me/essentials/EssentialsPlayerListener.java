@@ -177,17 +177,26 @@ public class EssentialsPlayerListener implements Listener {
             return;
         }
 
-        if (!ess.getSettings().cancelAfkOnMove() && !ess.getSettings().getFreezeAfkPlayers()) {
-            event.getHandlers().unregister(this);
+        final User user = ess.getUser(event.getPlayer());
 
-            if (ess.getSettings().isDebug()) {
-                LOGGER.log(Level.INFO, "Unregistering move listener");
+        if (user.isFreeze()) {
+            final Location from = event.getFrom();
+            final Location to = event.getTo().clone();
+            to.setX(from.getX());
+            to.setY(from.getY());
+            to.setZ(from.getZ());
+            try {
+                event.setTo(LocationUtil.getSafeDestination(to));
+            } catch (final Exception ex) {
+                event.setTo(to);
             }
-
             return;
         }
 
-        final User user = ess.getUser(event.getPlayer());
+        if (!ess.getSettings().cancelAfkOnMove() && !ess.getSettings().getFreezeAfkPlayers()) {
+            return;
+        }
+
         if (user.isAfk() && ess.getSettings().getFreezeAfkPlayers()) {
             final Location from = event.getFrom();
             final Location origTo = event.getTo();

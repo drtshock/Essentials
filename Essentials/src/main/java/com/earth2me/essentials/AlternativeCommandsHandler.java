@@ -29,7 +29,7 @@ public class AlternativeCommandsHandler {
     }
 
     public final void addPlugin(final Plugin plugin) {
-        if (plugin.getDescription().getMain().contains("com.earth2me.essentials")) {
+        if (plugin.getDescription().getMain().contains("com.earth2me.essentials") || plugin.getDescription().getMain().contains("net.essentialsx")) {
             return;
         }
         for (final Map.Entry<String, Command> entry : getPluginCommands(plugin).entrySet()) {

@@ -2,6 +2,8 @@ package net.essentialsx.api.v2.services.discord;
 
 import org.bukkit.plugin.Plugin;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * A class which provides numerous methods to interact with EssentialsX Discord.
  */
@@ -34,6 +36,13 @@ public interface DiscordService {
      * @return the {@link InteractionController} instance.
      */
     InteractionController getInteractionController();
+
+    /**
+     * Gets an {@link InteractionMember} by their Discord ID.
+     * @param id The ID of the member to look up.
+     * @return A future which will complete with the member or null if none is reachable.
+     */
+    CompletableFuture<InteractionMember> getMemberById(final String id);
 
     /**
      * Gets unstable API that is subject to change at any time.

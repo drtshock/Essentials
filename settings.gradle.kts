@@ -33,6 +33,7 @@ sequenceOf(
     "AntiBuild",
     "Chat",
     "Discord",
+    "DiscordLink",
     "GeoIP",
     "Protect",
     "Spawn",

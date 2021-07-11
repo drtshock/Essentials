@@ -27,6 +27,11 @@ public class InteractionMemberImpl implements InteractionMember {
     }
 
     @Override
+    public String getAsMention() {
+        return member.getAsMention();
+    }
+
+    @Override
     public String getEffectiveName() {
         return member.getEffectiveName();
     }

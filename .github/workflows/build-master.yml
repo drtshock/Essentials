@@ -59,6 +59,7 @@ jobs:
         cp -r EssentialsAntiBuild/build/docs/javadoc/ javadocs/EssentialsAntiBuild/
         cp -r EssentialsChat/build/docs/javadoc/ javadocs/EssentialsChat/
         cp -r EssentialsDiscord/build/docs/javadoc/ javadocs/EssentialsDiscord/
+        cp -r EssentialsDiscordLink/build/docs/javadoc/ javadocs/EssentialsDiscordLink/
         cp -r EssentialsGeoIP/build/docs/javadoc/ javadocs/EssentialsGeoIP/
         cp -r EssentialsProtect/build/docs/javadoc/ javadocs/EssentialsProtect/
         cp -r EssentialsSpawn/build/docs/javadoc/ javadocs/EssentialsSpawn/

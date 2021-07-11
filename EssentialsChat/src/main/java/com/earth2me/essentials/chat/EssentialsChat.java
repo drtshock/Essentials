@@ -47,7 +47,6 @@ public class EssentialsChat extends JavaPlugin {
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args) {
-        metrics.markCommand(command.getName(), true);
         return ess.onCommandEssentials(sender, command, commandLabel, args, EssentialsChat.class.getClassLoader(), "com.earth2me.essentials.chat.Command", "essentials.", null);
     }
 }

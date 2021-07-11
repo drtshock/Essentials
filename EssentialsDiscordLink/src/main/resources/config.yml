@@ -1,0 +1,21 @@
+#############################################################
+# +-------------------------------------------------------+ #
+# |                EssentialsX DiscordLink                | #
+# +-------------------------------------------------------+ #
+#############################################################
+
+# This is the config file for EssentialsXDiscordLink.
+# This config was generated for version ${full.version}.
+
+# The desired behavior when a player hasn't linked their Minecraft account to Discord.
+# Accepts the following values:
+# - kick: Kicks the player with a link code and requires they link their discord account before they can join.
+# - freeze: Prevents player from moving/interacting/doing commands when they join until they link their discord account.
+# - none: Places no restrictions on players for unlinked accounts.
+link-policy: none
+
+# The Discord invite URL that will be shown when a player is told to link their account
+discord-url: "https://discord.gg/invite-code"
+
+# Whether or not to ignore Discord messages from unlinked members and hide them from Minecraft chat.
+block-unlinked-chat: false

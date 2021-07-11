@@ -1,0 +1,8 @@
+plugins {
+    id("essentials.module-conventions")
+}
+
+dependencies {
+    compileOnly project(':EssentialsX')
+    compileOnly project(':EssentialsXDiscord')
+}
