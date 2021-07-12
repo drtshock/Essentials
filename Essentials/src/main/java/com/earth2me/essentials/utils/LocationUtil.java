@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,8 +31,8 @@ public final class LocationUtil {
         "FLOWING_LAVA", "LAVA", "STATIONARY_LAVA");
     private static final Material PORTAL = EnumUtil.getMaterial("NETHER_PORTAL", "PORTAL");
     // The player can stand inside these materials
-    private static final Set<Material> HOLLOW_MATERIALS = new HashSet<>();
-    private static final Set<Material> TRANSPARENT_MATERIALS = new HashSet<>();
+    private static final Set<Material> HOLLOW_MATERIALS = EnumSet.noneOf(Material.class);
+    private static final Set<Material> TRANSPARENT_MATERIALS = EnumSet.noneOf(Material.class);
 
     static {
         // Materials from Material.isTransparent()
@@ -44,6 +44,9 @@ public final class LocationUtil {
 
         TRANSPARENT_MATERIALS.addAll(HOLLOW_MATERIALS);
         TRANSPARENT_MATERIALS.addAll(WATER_TYPES);
+
+        // Barrier is transparent, but solid
+        HOLLOW_MATERIALS.remove(Material.BARRIER);
     }
 
     static {
