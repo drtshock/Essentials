@@ -11,5 +11,5 @@ shadowJar {
     dependencies {
         include (dependency('org.igniterealtime.smack:smack'))
     }
-    relocate 'org.bstats.bukkit', 'com.earth2me.essentials.metrics'
+    relocate 'org.bstats', 'com.earth2me.essentials.metrics'
 }

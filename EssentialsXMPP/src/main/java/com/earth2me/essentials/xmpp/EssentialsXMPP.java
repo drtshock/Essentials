@@ -3,7 +3,7 @@ package com.earth2me.essentials.xmpp;
 import com.earth2me.essentials.IEssentials;
 import com.earth2me.essentials.metrics.MetricsWrapper;
 import net.ess3.api.IUser;
-import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,7 +56,7 @@ public class EssentialsXMPP extends JavaPlugin implements IEssentialsXMPP {
 
         if (metrics == null) {
             metrics = new MetricsWrapper(this, 3818, true);
-            metrics.addCustomChart(new Metrics.SimplePie("config-valid", () -> xmpp.isConfigValid() ? "yes" : "no"));
+            metrics.addCustomChart(new SimplePie("config-valid", () -> xmpp.isConfigValid() ? "yes" : "no"));
         }
     }
 
