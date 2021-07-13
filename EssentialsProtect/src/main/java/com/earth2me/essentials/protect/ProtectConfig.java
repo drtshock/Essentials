@@ -61,6 +61,8 @@ public enum ProtectConfig {
     prevent_pig_transformation("protect.prevent.transformation.zombie-pigman", false),
     prevent_zombie_drowning("protect.prevent.transformation.drowned", false),
     prevent_mooshroom_switching("protect.prevent.transformation.mooshroom", false);
+    lingering_potion_particles("protect.prevent.lingering.effects",false);
+
     private final String configName;
     private final String defValueString;
     private final boolean defValueBoolean;

@@ -19,4 +19,16 @@ public class EssentialsProtectEntityListener_1_14_R1 implements Listener {
             event.setCancelled(true);
         }
     }
+   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+   public void onLingeringPotionSplasEvent(final LingeringPotionSplashEvent event){
+       if (prot.getSettingBool(ProtectConfig.lingering_potion_particles)) {
+       event.setCancelled(true);
+           }
+   }
+   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+   public void onAreaEffectCloudEvent(final AreaEffectCloudApplyEvent event){
+       if (prot.getSettingBool(ProtectConfig.lingering_potion_particles)) {
+           event.setCancelled(true);
+       }
+   }
 }
