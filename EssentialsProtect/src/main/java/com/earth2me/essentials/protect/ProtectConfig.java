@@ -18,6 +18,7 @@ public enum ProtectConfig {
     prevent_fire_spread("protect.prevent.fire-spread", true),
     prevent_flint_fire("protect.prevent.flint-fire", false),
     prevent_lava_fire_spread("protect.prevent.lava-fire-spread", true),
+    disable_piston_change("protect.prevent.piston-change", false),
     prevent_lightning_fire_spread("protect.prevent.lightning-fire-spread", true),
     prevent_water_flow("protect.prevent.water-flow", false),
     prevent_lava_flow("protect.prevent.lava-flow", false),
